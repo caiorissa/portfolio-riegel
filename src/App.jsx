@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Contato from "./pages/Contato.jsx";
+import Footer from "./components/Footer.jsx";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/contato" element={<Contato />} />
         </Routes>
+        <Footer />
       </main>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Mail, Instagram, ExternalLink } from "lucide-react";
+import { Mail, Instagram, ExternalLink, Youtube } from "lucide-react";
 import logo from "../assets/logoriegelsemfundo.png";
 
 export default function Contato() {
@@ -45,6 +45,13 @@ export default function Contato() {
             icon={<Mail size={20} />}
             label="Enviar Email"
             href="mailto:arturriegelph@gmail.com"
+          />
+         
+          {/* YOUTUBE */}
+          <ContactButton
+            icon={<Youtube size={20} />}
+            label="Youtube"
+            href="https://youtube.com/@riegelfilmss?si=XFGb7W6iy8E5QxCY"
           />
         </div>
 
