@@ -13,10 +13,8 @@ export default function Contato() {
         style={{ top: "12%", left: "50%", transform: "translateX(-50%)" }}
       />
 
-      {/* CONTAINER */}
       <div className="relative max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center z-10">
 
-        {/* LEFT TEXT SECTION */}
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
             Entre em Contato
@@ -33,21 +31,18 @@ export default function Contato() {
 
         <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 space-y-5">
 
-          {/* INSTAGRAM */}
           <ContactButton
             icon={<Instagram size={20} />}
             label="Instagram"
             href="https://instagram.com/riegelfilms"
           />
 
-          {/* EMAIL */}
           <ContactButton
             icon={<Mail size={20} />}
             label="Enviar Email"
             href="mailto:arturriegelph@gmail.com"
           />
          
-          {/* YOUTUBE */}
           <ContactButton
             icon={<Youtube size={20} />}
             label="Youtube"

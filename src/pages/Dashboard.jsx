@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,7 +14,6 @@ import {
 import { signOut } from "firebase/auth";
 import { auth, db, storage } from "../lib/firebaseConfig";
 
-// extrai ID do YouTube de um link
 function extractYouTubeId(url) {
   try {
     if (!url.includes("http")) return url;
@@ -43,27 +41,18 @@ function extractYouTubeId(url) {
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // ─────────────────────────────
-  // ESTADOS VÍDEOS
-  // ─────────────────────────────
   const [title, setTitle] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [description, setDescription] = useState("");
   const [submittingVideo, setSubmittingVideo] = useState(false);
   const [videos, setVideos] = useState([]);
-
-  // edição de vídeo
   const [editingVideo, setEditingVideo] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
   const [editThumbnailUrl, setEditThumbnailUrl] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
-
-  // ─────────────────────────────
-  // ESTADOS FOTOS AVULSAS
-  // ─────────────────────────────
   const [photoTitle, setPhotoTitle] = useState("");
   const [photoProject, setPhotoProject] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
@@ -71,9 +60,6 @@ export default function Dashboard() {
   const [submittingPhoto, setSubmittingPhoto] = useState(false);
   const [photoDescription, setPhotoDescription] = useState("");
 
-  // ─────────────────────────────
-  // EFFECTS – carregar dados
-  // ─────────────────────────────
   useEffect(() => {
     const qVideos = query(
       collection(db, "videos"),
@@ -99,13 +85,11 @@ export default function Dashboard() {
     };
   }, []);
 
-  // quando começa a editar, preenche os campos de edição
   useEffect(() => {
     if (!editingVideo) return;
     setEditTitle(editingVideo.title || "");
     setEditDescription(editingVideo.description || "");
     setEditThumbnailUrl(editingVideo.thumbnailUrl || "");
-    // reconstruir um link completo só pra UX
     const youtubeId = editingVideo.youtubeId || "";
     const fullUrl = youtubeId
       ? `https://www.youtube.com/watch?v=${youtubeId}`
@@ -113,9 +97,6 @@ export default function Dashboard() {
     setEditYoutubeUrl(fullUrl);
   }, [editingVideo]);
 
-  // ─────────────────────────────
-  // HANDLERS – VÍDEOS
-  // ─────────────────────────────
   async function handleSubmitVideo(e) {
     e.preventDefault();
     setSubmittingVideo(true);
@@ -189,9 +170,6 @@ export default function Dashboard() {
     }
   }
 
-  // ─────────────────────────────
-  // HANDLERS – FOTOS AVULSAS
-  // ─────────────────────────────
   async function handleSubmitPhoto(e) {
     e.preventDefault();
     setSubmittingPhoto(true);
@@ -233,9 +211,6 @@ export default function Dashboard() {
     console.error("Erro ao excluir foto:", err);
   }
 }
-  // ─────────────────────────────
-  // LOGOUT
-  // ─────────────────────────────
   async function handleLogout() {
     try {
       await signOut(auth);
@@ -245,9 +220,6 @@ export default function Dashboard() {
     }
   }
 
-  // ─────────────────────────────
-  // RENDER
-  // ─────────────────────────────
   return (
     <div className="max-w-6xl mx-auto px-4 pt-28 pb-10 space-y-10">
       {/* Cabeçalho */}
@@ -268,7 +240,6 @@ export default function Dashboard() {
         </button>
       </div>
 
-      {/* BLOCO: VÍDEOS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-sm font-medium text-white">
@@ -279,7 +250,6 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* formulário vídeo */}
         <form onSubmit={handleSubmitVideo} className="grid gap-4 md:grid-cols-2">
           <div className="space-y-1 md:col-span-2">
             <label className="text-xs text-neutral-400">Título</label>
@@ -344,7 +314,6 @@ export default function Dashboard() {
           </div>
         </form>
 
-        {/* lista vídeos */}
         <div className="space-y-3">
           {videos.length === 0 ? (
             <p className="text-xs text-neutral-500">
@@ -392,7 +361,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* painel de edição de vídeo */}
         {editingVideo && (
           <div className="mt-4 border border-white/15 rounded-xl p-4 bg-black/60">
             <div className="flex items-center justify-between mb-3">
@@ -477,7 +445,6 @@ export default function Dashboard() {
         )}
       </section>
 
-      {/* BLOCO: FOTOS AVULSAS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-sm font-medium text-white">
@@ -551,7 +518,6 @@ export default function Dashboard() {
           </div>
         </form>
 
-        {/* lista de fotos resumida */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {photos.map((photo) => (
               <div

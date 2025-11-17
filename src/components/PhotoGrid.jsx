@@ -1,4 +1,3 @@
-// src/components/PhotoGrid.jsx
 import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../lib/firebaseConfig";
@@ -33,22 +32,19 @@ export default function PhotoGrid() {
 
   return (
     <div className="w-full">
-
-      {/* Estado: Carregando */}
       {loading && (
         <p className="text-sm text-neutral-500 text-center py-10">
           Carregando fotos...
         </p>
       )}
 
-      {/* Estado: Nenhuma foto */}
       {!loading && photos.length === 0 && (
         <p className="text-sm text-neutral-500 text-center py-10">
           Nenhuma foto cadastrada ainda. Acesse o dashboard para adicionar.
         </p>
       )}
 
-      {/* Grid */}
+
       {!loading && photos.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {photos.map((photo) => (
@@ -79,7 +75,6 @@ export default function PhotoGrid() {
         </div>
       )}
 
-      {/* Modal */}
       <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
     </div>
   );

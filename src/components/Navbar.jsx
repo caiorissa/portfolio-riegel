@@ -15,7 +15,6 @@ export default function Navbar() {
   const [shrink, setShrink] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Detecta scroll para efeito shrink
   useEffect(() => {
     const handleScroll = () => {
       setShrink(window.scrollY > 20);
@@ -24,7 +23,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Detecta login/logout
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsub();
@@ -48,7 +46,6 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
 
-        {/* LOGO */}
         <Link to="/" className="flex items-center">
           <img
             src={logo}
@@ -60,28 +57,23 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* NAVIGATION */}
         <nav className="flex items-center gap-8 text-sm font-light">
 
           <PremiumLink to="/" active={isHome}>
             Home
           </PremiumLink>
-
-          {/* Botão Dashboard — só aparece logado, e somente admin */}
           {isAdmin && (
             <PremiumLink to="/dashboard" active={isDashboard}>
               Dashboard
             </PremiumLink>
           )}
 
-          {/* Botão Login — só aparece se NÃO estiver logado */}
           {!user && (
             <PremiumLink to="/login" active={false}>
               Login
             </PremiumLink>
           )}
 
-          {/* Botão Logout — só aparece logado */}
           {user && (
             <button
               onClick={logout}
@@ -92,7 +84,6 @@ export default function Navbar() {
             </button>
           )}
 
-          {/* BOTÃO CONTATO — sempre visível */}
           <PremiumLink to="/contato" active={location.pathname === "/contato"}>
             Contato
           </PremiumLink>
@@ -103,7 +94,6 @@ export default function Navbar() {
   );
 }
 
-/* COMPONENTE DE LINK PREMIUM */
 function PremiumLink({ to, active, children }) {
   return (
     <Link
@@ -114,8 +104,6 @@ function PremiumLink({ to, active, children }) {
       }
     >
       {children}
-
-      {/* underline animado */}
       <span
         className={
           "absolute left-0 -bottom-[2px] h-[1.5px] bg-white block transition-all duration-300 " +

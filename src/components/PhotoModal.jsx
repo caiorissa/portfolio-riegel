@@ -34,7 +34,6 @@ export default function PhotoModal({ photo, onClose }) {
             />
           </AnimatePresence>
 
-          {/* info */}
           <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
             <p className="text-white font-medium text-lg">{photo.title}</p>
 

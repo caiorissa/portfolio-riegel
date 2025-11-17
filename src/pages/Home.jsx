@@ -75,7 +75,6 @@ export default function Home() {
   </div>
 </section>
 
-{/* SEÇÃO VÍDEOS */}
 <section
   className="
     mb-10 p-8 rounded-3xl
@@ -97,7 +96,6 @@ export default function Home() {
     e ver detalhes.
   </p>
 
-  {/* LISTA DE VÍDEOS */}
   {loading ? (
     <div className="min-h-[30vh] flex items-center justify-center">
       <p className="text-sm text-neutral-500 tracking-[0.2em] uppercase">
@@ -148,7 +146,6 @@ export default function Home() {
 </section>
 
       
-      {/* MODAL */}
       <VideoModal
         video={selectedVideo}
         onClose={() => setSelectedVideo(null)}
