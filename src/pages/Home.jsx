@@ -84,10 +84,6 @@ export default function Home() {
     Portfólio Audiovisual
   </p>
 
-  <h1 className="text-2xl md:text-3xl font-semibold text-white mb-3">
-    Trabalhos selecionados em vídeo
-  </h1>
-
   <p className="text-sm text-neutral-400 max-w-2xl mb-6">
     Uma seleção minimalista dos projetos em vídeo. Clique em um card para assistir
     e ver detalhes.
@@ -130,10 +126,6 @@ export default function Home() {
   <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
     Olhar estético
   </p>
-
-  <h2 className="text-xl md:text-2xl font-semibold text-white mb-3">
-    Trabalhos em imagem
-  </h2>
 
   <p className="text-sm text-neutral-400 max-w-2xl mb-6">
     Uma seleção de fotos avulsas e projetos fotográficos.
