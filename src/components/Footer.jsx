@@ -39,7 +39,9 @@ export default function Footer() {
           </a>
 
           <a
-            href="mailto:arturriegelph@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
             className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition border border-white/10"
           >
             <Mail size={18} className="text-white" />

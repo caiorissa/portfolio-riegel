@@ -40,7 +40,7 @@ export default function Contato() {
           <ContactButton
             icon={<Mail size={20} />}
             label="Enviar Email"
-            href="mailto:arturriegelph@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
           />
          
           <ContactButton
