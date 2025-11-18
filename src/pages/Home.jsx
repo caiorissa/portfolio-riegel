@@ -62,10 +62,7 @@ export default function Home() {
     </h3>
 
     <p className="text-neutral-300 text-sm md:text-base leading-relaxed">
-      Sou videomaker e fotógrafo especializado em capturar momentos com estética,
-      emoção e identidade visual. Meu trabalho combina luz, narrativa e direção
-      para transformar histórias em imagens marcantes. Sempre com foco em
-      profundidade, movimento e autenticidade.
+      Filmmaker especialista em apresentar sua marca. Desde 2024 dando o reconhecimento que seu trabalho merece, através de filmes, comerciais, documentários e vídeos curtos multiplataforma. De Barra do Ribeiro/RS para o mundo!
     </p>
 
     <p className="text-neutral-400 text-xs md:text-sm mt-3 leading-relaxed">
@@ -84,7 +81,7 @@ export default function Home() {
   "
 >
   <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-    Portfólio em vídeo
+    Portfólio Audiovisual
   </p>
 
   <h1 className="text-2xl md:text-3xl font-semibold text-white mb-3">
@@ -131,7 +128,7 @@ export default function Home() {
   "
 >
   <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-    Fotografias
+    Olhar estético
   </p>
 
   <h2 className="text-xl md:text-2xl font-semibold text-white mb-3">
