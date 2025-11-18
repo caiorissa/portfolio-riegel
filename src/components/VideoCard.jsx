@@ -1,34 +1,44 @@
 import React from "react";
 
 export default function VideoCard({ video, onClick }) {
+  if (!video || !video.youtubeId) {
+    console.warn("Video sem youtubeId:", video);
+    return null;
+  }
+
+  // thumb padrão do YouTube
+  const thumbUrl = `https://img.youtube.com/vi/${video.youtubeId}/0.jpg`;
+
   return (
-    <button
+    <div
       onClick={onClick}
-      className="group text-left bg-neutral-950 border border-white/5 rounded-xl overflow-hidden hover:border-white/20 transition flex flex-col h-full"
+      className="cursor-pointer group rounded-2xl overflow-hidden
+                 bg-white/5 border border-white/10
+                 backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
+                 hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
+                 transition-all"
     >
-      <div className="relative aspect-video overflow-hidden bg-neutral-900">
-        {video.thumbnailUrl ? (
-          <img
-            src={video.thumbnailUrl}
-            alt={video.title}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[0.65rem] text-neutral-500">
-            Sem thumbnail
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 opacity-0 group-hover:opacity-100 transition" />
+      {/* THUMBNAIL */}
+      <div className="relative w-full aspect-video bg-black overflow-hidden">
+        <img
+          src={thumbUrl}
+          alt={video.title}
+          className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+          onError={() => {
+            console.error("Erro ao carregar thumbnail de", video.youtubeId);
+          }}
+        />
       </div>
-      <div className="p-3 flex-1 flex flex-col gap-1.5">
-        <h3 className="text-sm font-medium text-white line-clamp-2">
+
+      {/* TEXTO */}
+      <div className="p-4">
+        <h3 className="text-white font-semibold text-sm md:text-base mb-1">
           {video.title}
         </h3>
-        <p className="text-xs text-neutral-400 line-clamp-2">
+        <p className="text-neutral-400 text-xs line-clamp-2">
           {video.description}
         </p>
       </div>
-    </button>
+    </div>
   );
 }

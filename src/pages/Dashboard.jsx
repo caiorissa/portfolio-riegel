@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,8 +13,9 @@ import {
   updateDoc
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
-import { auth, db, storage } from "../lib/firebaseConfig";
+import { auth, db } from "../lib/firebaseConfig";
 
+// extrai ID do YouTube de qualquer link
 function extractYouTubeId(url) {
   try {
     if (!url.includes("http")) return url;
@@ -41,43 +43,43 @@ function extractYouTubeId(url) {
 export default function Dashboard() {
   const navigate = useNavigate();
 
+  
+  // ESTADOS VÍDEOS
+  
   const [title, setTitle] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [description, setDescription] = useState("");
   const [submittingVideo, setSubmittingVideo] = useState(false);
   const [videos, setVideos] = useState([]);
+
   const [editingVideo, setEditingVideo] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
-  const [editThumbnailUrl, setEditThumbnailUrl] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
+
+  
+  // ESTADOS FOTOS AVULSAS
+  
   const [photoTitle, setPhotoTitle] = useState("");
   const [photoProject, setPhotoProject] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
-  const [photos, setPhotos] = useState([]);
-  const [submittingPhoto, setSubmittingPhoto] = useState(false);
   const [photoDescription, setPhotoDescription] = useState("");
+  const [submittingPhoto, setSubmittingPhoto] = useState(false);
+  const [photos, setPhotos] = useState([]);
 
+  
+  // CARREGAR ITENS
   useEffect(() => {
-    const qVideos = query(
-      collection(db, "videos"),
-      orderBy("createdAt", "desc")
+    const unsubVideos = onSnapshot(
+      query(collection(db, "videos"), orderBy("createdAt", "desc")),
+      (snap) => setVideos(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
-    const unsubVideos = onSnapshot(qVideos, (snapshot) => {
-      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      setVideos(list);
-    });
 
-    const qPhotos = query(
-      collection(db, "photos"),
-      orderBy("createdAt", "desc")
+    const unsubPhotos = onSnapshot(
+      query(collection(db, "photos"), orderBy("createdAt", "desc")),
+      (snap) => setPhotos(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
-    const unsubPhotos = onSnapshot(qPhotos, (snapshot) => {
-      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      setPhotos(list);
-    });
 
     return () => {
       unsubVideos();
@@ -85,221 +87,195 @@ export default function Dashboard() {
     };
   }, []);
 
+  // Quando começa edição de vídeo, preenche inputs
   useEffect(() => {
     if (!editingVideo) return;
+
     setEditTitle(editingVideo.title || "");
     setEditDescription(editingVideo.description || "");
-    setEditThumbnailUrl(editingVideo.thumbnailUrl || "");
-    const youtubeId = editingVideo.youtubeId || "";
-    const fullUrl = youtubeId
-      ? `https://www.youtube.com/watch?v=${youtubeId}`
+
+    const fullUrl = editingVideo.youtubeId
+      ? `https://www.youtube.com/watch?v=${editingVideo.youtubeId}`
       : "";
+
     setEditYoutubeUrl(fullUrl);
   }, [editingVideo]);
 
-  async function handleSubmitVideo(e) {
-    e.preventDefault();
-    setSubmittingVideo(true);
+  
+  // SALVAR VÍDEO — com thumbnail automática
+  
+async function handleSubmitVideo(e) {
+  e.preventDefault();
+  setSubmittingVideo(true);
 
-    const youtubeId = extractYouTubeId(youtubeUrl);
+  const youtubeId = extractYouTubeId(youtubeUrl);
 
-    if (!youtubeId) {
-      alert("O link do YouTube não é válido.");
-      setSubmittingVideo(false);
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, "videos"), {
-        title: title.trim(),
-        youtubeId: youtubeId.trim(),
-        thumbnailUrl: thumbnailUrl.trim(),
-        description: description.trim(),
-        createdAt: serverTimestamp()
-      });
-
-      setTitle("");
-      setYoutubeUrl("");
-      setThumbnailUrl("");
-      setDescription("");
-    } catch (error) {
-      console.error("Erro ao salvar vídeo:", error);
-    } finally {
-      setSubmittingVideo(false);
-    }
+  if (!youtubeId) {
+    alert("O link do YouTube não é válido.");
+    setSubmittingVideo(false);
+    return;
   }
 
+  try {
+    await addDoc(collection(db, "videos"), {
+      title: title.trim(),
+      youtubeId: youtubeId.trim(),
+      description: description.trim(),
+      createdAt: serverTimestamp(),
+    });
+
+    setTitle("");
+    setYoutubeUrl("");
+    setDescription("");
+  } catch (error) {
+    console.error("Erro ao salvar vídeo:", error);
+  } finally {
+    setSubmittingVideo(false);
+  }
+}
+
+
+
+  
+  // DELETAR VÍDEO
+  
   async function handleDeleteVideo(id) {
-    const ok = window.confirm("Tem certeza que deseja excluir este vídeo?");
-    if (!ok) return;
-
-    try {
-      await deleteDoc(doc(db, "videos", id));
-    } catch (error) {
-      console.error("Erro ao excluir vídeo:", error);
-    }
+    if (!window.confirm("Excluir este vídeo?")) return;
+    await deleteDoc(doc(db, "videos", id));
   }
 
+  
+  // EDITAR VÍDEO — thumbnail automática também
+  
   async function handleUpdateVideo(e) {
     e.preventDefault();
     if (!editingVideo) return;
 
     setSavingEdit(true);
 
-    const newYoutubeId = extractYouTubeId(editYoutubeUrl);
+    const newId = extractYouTubeId(editYoutubeUrl);
 
-    if (!newYoutubeId) {
-      alert("O link do YouTube (edição) não é válido.");
+    if (!newId) {
+      alert("Link inválido.");
       setSavingEdit(false);
       return;
     }
+
+    const newThumb = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
 
     try {
       await updateDoc(doc(db, "videos", editingVideo.id), {
         title: editTitle.trim(),
         description: editDescription.trim(),
-        youtubeId: newYoutubeId.trim(),
-        thumbnailUrl: editThumbnailUrl.trim()
+        youtubeId: newId,
+        thumbnailUrl: newThumb
       });
 
       setEditingVideo(null);
-    } catch (error) {
-      console.error("Erro ao atualizar vídeo:", error);
+    } catch (err) {
+      console.error(err);
     } finally {
       setSavingEdit(false);
     }
   }
 
+  
+  // SALVAR FOTO AVULSA (URL normal)
+  
   async function handleSubmitPhoto(e) {
     e.preventDefault();
     setSubmittingPhoto(true);
 
+    if (!photoUrl.trim()) {
+      alert("Informe uma URL.");
+      setSubmittingPhoto(false);
+      return;
+    }
+
     try {
-      let finalUrl = photoUrl.trim();
-
-      if (!finalUrl) {
-        alert("Informe uma URL de imagem.");
-        setSubmittingPhoto(false);
-        return;
-      }
-
-        await addDoc(collection(db, "photos"), {
-          title: photoTitle.trim(),
-          project: photoProject.trim() || null,
-          description: photoDescription.trim() || null,
-          imageUrl: finalUrl,
-          createdAt: serverTimestamp()
-        });
+      await addDoc(collection(db, "photos"), {
+        title: photoTitle.trim(),
+        project: photoProject.trim() || null,
+        description: photoDescription.trim() || null,
+        imageUrl: photoUrl.trim(),
+        createdAt: serverTimestamp()
+      });
 
       setPhotoTitle("");
       setPhotoProject("");
       setPhotoUrl("");
-    } catch (error) {
-      console.error("Erro ao salvar foto:", error);
+      setPhotoDescription("");
+    } catch (err) {
+      console.error(err);
     } finally {
       setSubmittingPhoto(false);
     }
   }
-  
+
   async function handleDeletePhoto(id) {
-  const ok = window.confirm("Excluir esta foto?");
-  if (!ok) return;
-
-  try {
+    if (!window.confirm("Excluir foto?")) return;
     await deleteDoc(doc(db, "photos", id));
-  } catch (err) {
-    console.error("Erro ao excluir foto:", err);
   }
-}
+  
+  // LOGOUT
+  
   async function handleLogout() {
-    try {
-      await signOut(auth);
-      navigate("/", { replace: true });
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-    }
+    await signOut(auth);
+    navigate("/", { replace: true });
   }
 
+  
+  // RENDER
+  
   return (
     <div className="max-w-6xl mx-auto px-4 pt-28 pb-10 space-y-10">
+      
       {/* Cabeçalho */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-[0.7rem] tracking-[0.25em] uppercase text-neutral-500 mb-1">
-            Painel administrativo
-          </p>
-          <h1 className="text-2xl font-semibold text-white">
-            Gerenciar conteúdo
-          </h1>
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-white">Painel administrativo</h1>
         <button
           onClick={handleLogout}
-          className="text-xs px-3 py-2 border border-white/20 rounded-full hover:bg-white hover:text-black transition"
+          className="px-3 py-2 text-xs border border-white/20 rounded-full hover:bg-white hover:text-black transition"
         >
           Logout
         </button>
       </div>
 
+      {/* FORMULÁRIO VÍDEOS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-medium text-white">
-            Vídeos
-          </h2>
-          <p className="text-[0.7rem] text-neutral-500">
-            Adicione ou gerencie vídeos do portfólio
-          </p>
-        </div>
+        <h2 className="text-sm font-medium text-white">Vídeos</h2>
 
         <form onSubmit={handleSubmitVideo} className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-1 md:col-span-2">
+          <div className="md:col-span-2">
             <label className="text-xs text-neutral-400">Título</label>
             <input
-              type="text"
-              required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="Título do vídeo"
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              required
             />
           </div>
 
-          <div className="space-y-1 md:col-span-2">
+          <div className="md:col-span-2">
             <label className="text-xs text-neutral-400">
               Link completo do YouTube
             </label>
             <input
-              type="url"
-              required
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="https://www.youtube.com/watch?v=..."
-            />
-          </div>
-
-          <div className="space-y-1 md:col-span-2">
-            <label className="text-xs text-neutral-400">
-              URL da thumbnail (qualquer imagem)
-            </label>
-            <input
               type="url"
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
               required
-              value={thumbnailUrl}
-              onChange={(e) => setThumbnailUrl(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="https://site.com/imagem.jpg"
             />
           </div>
 
-          <div className="space-y-1 md:col-span-2">
+          <div className="md:col-span-2">
             <label className="text-xs text-neutral-400">Descrição</label>
             <textarea
-              required
-              rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40 resize-none"
-              placeholder="Breve descrição do vídeo"
+              rows={3}
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm resize-none"
             />
           </div>
 
@@ -307,137 +283,84 @@ export default function Dashboard() {
             <button
               type="submit"
               disabled={submittingVideo}
-              className="text-xs font-medium px-4 py-2.5 bg-white text-black rounded-full hover:bg-neutral-100 disabled:opacity-60 disabled:cursor-not-allowed transition"
+              className="px-4 py-2 text-xs bg-white text-black rounded-full"
             >
               {submittingVideo ? "Salvando..." : "Salvar vídeo"}
             </button>
           </div>
         </form>
 
+        {/* LISTA VIDEOS */}
         <div className="space-y-3">
-          {videos.length === 0 ? (
-            <p className="text-xs text-neutral-500">
-              Nenhum vídeo cadastrado ainda.
-            </p>
-          ) : (
-            videos.map((video) => (
-              <div
-                key={video.id}
-                className="flex flex-col md:flex-row md:items-center gap-3 border border-white/5 rounded-xl px-3 py-2 bg-black"
-              >
-                <div className="w-full md:w-32 h-20 rounded-md overflow-hidden bg-neutral-900 flex-shrink-0">
-                  {video.thumbnailUrl && (
-                    <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-white truncate">
-                    {video.title}
-                  </p>
-                  <p className="text-[0.7rem] text-neutral-500 truncate">
-                    {video.youtubeId}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setEditingVideo(video)}
-                    className="text-[0.7rem] px-3 py-1 rounded-full border border-white/20 hover:bg-white hover:text-black transition"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDeleteVideo(video.id)}
-                    className="text-[0.7rem] px-3 py-1 rounded-full border border-red-400/60 text-red-300 hover:bg-red-500 hover:text-white transition"
-                  >
-                    Excluir
-                  </button>
-                </div>
+          {videos.map((video) => (
+            <div
+              key={video.id}
+              className="flex items-center gap-3 bg-black p-3 rounded-xl border border-white/10"
+            >
+              <img
+                src={video.thumbnailUrl}
+                className="w-28 h-20 rounded-md object-cover"
+              />
+              <div className="flex-1">
+                <p className="text-white text-sm">{video.title}</p>
               </div>
-            ))
-          )}
-        </div>
 
-        {editingVideo && (
-          <div className="mt-4 border border-white/15 rounded-xl p-4 bg-black/60">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-medium text-white">
-                Editar vídeo
-              </h3>
               <button
-                onClick={() => setEditingVideo(null)}
-                className="text-[0.7rem] text-neutral-400 hover:text-white transition"
+                onClick={() => setEditingVideo(video)}
+                className="px-3 py-1 text-xs border border-white/20 rounded-full"
               >
-                Fechar
+                Editar
+              </button>
+
+              <button
+                onClick={() => handleDeleteVideo(video.id)}
+                className="px-3 py-1 text-xs bg-red-600 text-white rounded-full"
+              >
+                Excluir
               </button>
             </div>
+          ))}
+        </div>
 
-            <form onSubmit={handleUpdateVideo} className="grid gap-3 md:grid-cols-2">
-              <div className="space-y-1 md:col-span-2">
-                <label className="text-xs text-neutral-400">Título</label>
-                <input
-                  type="text"
-                  required
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full bg-black border border-white/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-                />
-              </div>
+        {/* EDIÇÃO */}
+        {editingVideo && (
+          <div className="p-4 border border-white/10 rounded-xl mt-4 bg-black">
+            <h3 className="text-white text-sm mb-3">Editar vídeo</h3>
 
-              <div className="space-y-1 md:col-span-2">
-                <label className="text-xs text-neutral-400">
-                  Link completo do YouTube
-                </label>
-                <input
-                  type="url"
-                  required
-                  value={editYoutubeUrl}
-                  onChange={(e) => setEditYoutubeUrl(e.target.value)}
-                  className="w-full bg-black border border-white/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-                />
-              </div>
+            <form onSubmit={handleUpdateVideo} className="grid gap-3">
+              <input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              />
 
-              <div className="space-y-1 md:col-span-2">
-                <label className="text-xs text-neutral-400">
-                  URL da thumbnail
-                </label>
-                <input
-                  type="url"
-                  required
-                  value={editThumbnailUrl}
-                  onChange={(e) => setEditThumbnailUrl(e.target.value)}
-                  className="w-full bg-black border border-white/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-                />
-              </div>
+              <input
+                value={editYoutubeUrl}
+                onChange={(e) => setEditYoutubeUrl(e.target.value)}
+                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              />
 
-              <div className="space-y-1 md:col-span-2">
-                <label className="text-xs text-neutral-400">Descrição</label>
-                <textarea
-                  required
-                  rows={3}
-                  value={editDescription}
-                  onChange={(e) => setEditDescription(e.target.value)}
-                  className="w-full bg-black border border-white/15 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40 resize-none"
-                />
-              </div>
+              <textarea
+                value={editDescription}
+                rows={3}
+                onChange={(e) => setEditDescription(e.target.value)}
+                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm resize-none"
+              />
 
-              <div className="md:col-span-2 flex justify-end gap-2">
+              <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingVideo(null)}
-                  className="text-[0.7rem] px-4 py-2 rounded-full border border-white/20 hover:bg-neutral-900 transition"
+                  className="px-4 py-2 text-xs border border-white/20 rounded-full"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={savingEdit}
-                  className="text-[0.7rem] px-4 py-2 rounded-full bg-white text-black hover:bg-neutral-100 disabled:opacity-60 disabled:cursor-not-allowed transition"
+                  className="px-4 py-2 text-xs bg-white text-black rounded-full"
                 >
-                  {savingEdit ? "Salvando..." : "Salvar alterações"}
+                  {savingEdit ? "Salvando..." : "Salvar"}
                 </button>
               </div>
             </form>
@@ -445,119 +368,82 @@ export default function Dashboard() {
         )}
       </section>
 
+      {/* FOTOS AVULSAS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-sm font-medium text-white">
-            Fotos avulsas
-          </h2>
-          <p className="text-[0.7rem] text-neutral-500">
-            Link de fotos individuais
-          </p>
-        </div>
+        <h2 className="text-sm font-medium text-white">Fotos avulsas</h2>
 
         <form onSubmit={handleSubmitPhoto} className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-1">
-            <label className="text-xs text-neutral-400">Título</label>
-            <input
-              type="text"
-              required
-              value={photoTitle}
-              onChange={(e) => setPhotoTitle(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="Ex: Making of, Close da noiva..."
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs text-neutral-400">
-              Projeto (opcional)
-            </label>
-            <input
-              type="text"
-              value={photoProject}
-              onChange={(e) => setPhotoProject(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="Ex: Casamento João & Ana"
-            />
-          </div>
-
-          <div className="space-y-1 md:col-span-2">
-            <label className="text-xs text-neutral-400">
-              URL da imagem
-            </label>
-            <input
-              type="url"
-              value={photoUrl}
-              onChange={(e) => setPhotoUrl(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
-              placeholder="https://site.com/foto.jpg"
-            />
-            <p className="text-[0.7rem] text-neutral-500 mt-1">
-              Você pode informar uma URL.
-            </p>
-          </div>
-          <div className="space-y-1 md:col-span-2">
-          <label className="text-xs text-neutral-400">Descrição</label>
-          <textarea
-            rows={2}
-            value={photoDescription}
-            onChange={(e) => setPhotoDescription(e.target.value)}
-            className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40 resize-none"
-            placeholder="Breve descrição da foto"
+          <input
+            value={photoTitle}
+            required
+            onChange={(e) => setPhotoTitle(e.target.value)}
+            className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+            placeholder="Título"
           />
-        </div>
+
+          <input
+            value={photoProject}
+            onChange={(e) => setPhotoProject(e.target.value)}
+            className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+            placeholder="Projeto (opcional)"
+          />
+
+          <div className="md:col-span-2">
+            <input
+              value={photoUrl}
+              required
+              onChange={(e) => setPhotoUrl(e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              placeholder="URL da imagem"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <textarea
+              rows={2}
+              value={photoDescription}
+              onChange={(e) => setPhotoDescription(e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm resize-none"
+              placeholder="Descrição"
+            />
+          </div>
 
           <div className="md:col-span-2 flex justify-end">
             <button
               type="submit"
               disabled={submittingPhoto}
-              className="text-xs font-medium px-4 py-2.5 bg-white text-black rounded-full hover:bg-neutral-100 disabled:opacity-60 disabled:cursor-not-allowed transition"
+              className="px-4 py-2 bg-white text-black rounded-full text-xs"
             >
               {submittingPhoto ? "Salvando..." : "Salvar foto"}
             </button>
           </div>
         </form>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {photos.map((photo) => (
-              <div
-                key={photo.id}
-                className="border border-white/10 rounded-lg overflow-hidden bg-black relative"
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {photos.map((photo) => (
+            <div
+              key={photo.id}
+              className="border border-white/10 rounded-lg overflow-hidden bg-black relative"
+            >
+              <button
+                onClick={() => handleDeletePhoto(photo.id)}
+                className="absolute top-2 right-2 bg-red-600 text-white text-[0.6rem] px-2 py-1 rounded-full"
               >
-                <div className="absolute top-2 right-2 z-10">
-                  <button
-                    onClick={() => handleDeletePhoto(photo.id)}
-                    className="text-[0.6rem] px-2 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition"
-                  >
-                    Excluir
-                  </button>
-                </div>
+                Excluir
+              </button>
 
-                <div className="aspect-[4/3] bg-neutral-900 overflow-hidden">
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <img
+                src={photo.imageUrl}
+                className="w-full h-32 object-cover"
+              />
 
-                <div className="px-2 py-2">
-                  <p className="text-[0.7rem] text-white truncate">{photo.title}</p>
-
-                  {photo.project && (
-                    <p className="text-[0.65rem] text-neutral-500 truncate">{photo.project}</p>
-                  )}
-
-                  {photo.description && (
-                    <p className="text-[0.65rem] text-neutral-400 mt-1 line-clamp-3">
-                      {photo.description}
-                    </p>
-                  )}
-                </div>
+              <div className="p-2">
+                <p className="text-[0.7rem] text-white">{photo.title}</p>
               </div>
-            ))}
-          </div>
-      </section>  
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
