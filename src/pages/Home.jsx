@@ -48,27 +48,46 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-4 pt-28 pb-10">
 
-<section className="mt-10 mb-16">
-  <h2 className="text-xl md:text-2xl font-semibold text-white mb-4">
-    Sobre mim
-  </h2>
+{/* HERO PREMIUM APPLE STYLE */}
+<section className="relative w-full flex flex-col md:flex-row items-center justify-between mt-10 mb-20">
 
-  <div className="mb-16 p-8 rounded-3xl
-          bg-white/5 border border-white/10
-          backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
-          transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]">
-    <h3 className="text-lg font-medium text-white mb-3">
+  {/* BOX DE TEXTO GLASS */}
+  <div
+    className="
+      md:w-1/2 w-full
+      p-10 rounded-3xl
+      bg-white/5 border border-white/10
+      backdrop-blur-2xl
+      shadow-[0_0_50px_rgba(255,255,255,0.05)]
+      hover:shadow-[0_0_80px_rgba(255,255,255,0.09)]
+      transition
+    "
+  >
+    <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
       Artur Riegel
-    </h3>
+    </h1>
 
-    <p className="text-neutral-300 text-sm md:text-base leading-relaxed">
-      Filmmaker especialista em apresentar sua marca. Desde 2024 dando o reconhecimento que seu trabalho merece, através de filmes, comerciais, documentários e vídeos curtos multiplataforma. De Barra do Ribeiro/RS para o mundo!
+    <p className="text-neutral-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
+      Filmmaker especialista em apresentar sua marca. Desde 2024 dando o reconhecimento que seu trabalho merece, através de filmes, comerciais, documentários e vídeos curtos multiplataforma. De Barra do Ribeiro - RS para o mundo!
     </p>
 
-    <p className="text-neutral-400 text-xs md:text-sm mt-3 leading-relaxed">
-      Aqui você encontra uma seleção de vídeos, fotos e álbuns produzidos ao longo
-      da minha trajetória profissional.
-    </p>
+    <button
+      onClick={() => window.open("mailto:arturriegelph@gmail.com")}
+      className="px-6 py-3 bg-white text-black rounded-full text-sm font-medium hover:bg-neutral-200 transition"
+    >
+      Entrar em contato
+    </button>
+  </div>
+  <div className="md:w-1/2 w-full flex justify-center mt-10 md:mt-0">
+    <img
+      src="/foto-riegel.jpeg"
+      className="
+        w-[90%] md:w-[420px] h-auto
+        rounded-3xl object-cover
+        shadow-lg shadow-black/40
+      "
+      alt="Artur Riegel"
+    />
   </div>
 </section>
 
