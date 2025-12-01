@@ -10,7 +10,6 @@ import { db } from "../lib/firebaseConfig";
 import VideoCard from "../components/VideoCard.jsx";
 import VideoModal from "../components/VideoModal.jsx";
 import PhotoGrid from "../components/PhotoGrid.jsx";
-import PhotoModal from "../components/PhotoModal.jsx";
 
 const MAX_VIDEOS = 15;
 
@@ -46,114 +45,135 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 pt-28 pb-10">
+    <div className="max-w-6xl mx-auto px-4 pt-28 pb-10">
+{/* WRAPPER DO HEADER – FUNDO PRETO FULL WIDTH */}
+<div className="relative w-full">
 
-{/* HERO PREMIUM APPLE STYLE */}
-<section className="relative w-full flex flex-col md:flex-row items-center justify-between mt-10 mb-20">
+  {/* FUNDO PRETO FIXO (A BASE) */}
+  <div className="absolute inset-0 h-[958px] left-[-1500px] right-[-291px] top-[-250px] bg-black -z-20"></div>
 
-  {/* BOX DE TEXTO GLASS */}
-  <div
+  {/* DEGRADÊ SUAVE PARA O FUNDO */}
+  <div className="
+      absolute inset-x-0 bottom-0
+      h-[300px] left-[-1500px] right-[-291px]
+      bg-gradient-to-b
+      from-black/100 via-black/90 to-black/0
+      -z-10
+    ">
+  </div>
+
+  {/* CONTEÚDO DO HEADER */}
+  <section
     className="
-      md:w-1/2 w-full
-      p-10 rounded-3xl
-      bg-white/5 border border-white/10
-      backdrop-blur-2xl
-      shadow-[0_0_50px_rgba(255,255,255,0.05)]
-      hover:shadow-[0_0_80px_rgba(255,255,255,0.09)]
-      transition
+      max-w-6xl mx-auto px-4 md:px-10
+      min-h-[90vh]
+      flex flex-col md:flex-row items-center justify-between
+      pt-0 relative
     "
   >
-    <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
-      Artur Riegel
-    </h1>
 
-    <p className="text-neutral-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
-      Filmmaker especialista em apresentar sua marca. Desde 2024 dando o reconhecimento que seu trabalho merece, através de filmes, comerciais, documentários e vídeos curtos multiplataforma. De Barra do Ribeiro - RS para o mundo!
-    </p>
+    {/* TEXTOS */}
+    <div className="md:w-1/2 z-10">
+      <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-8">
+        Criação audiovisual<br />de alto impacto.
+      </h1>
 
-    <button
-      onClick={() => window.open("mailto:arturriegelph@gmail.com")}
-      className="px-6 py-3 bg-white text-black rounded-full text-sm font-medium hover:bg-neutral-200 transition"
-    >
-      Entrar em contato
-    </button>
-  </div>
-  <div className="md:w-1/2 w-full flex justify-center mt-10 md:mt-0">
-    <img
-      src="/foto-riegel.jpeg"
-      className="
-        w-[90%] md:w-[420px] h-auto
-        rounded-3xl object-cover
-        shadow-lg shadow-black/40
-      "
-      alt="Artur Riegel"
-    />
-  </div>
-</section>
-
-<section
-  className="
-    mb-10 p-8 rounded-3xl
-    bg-white/5 border border-white/10
-    backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
-    transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
-  "
->
-  <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-    Portfólio Audiovisual
-  </p>
-
-  <p className="text-sm text-neutral-400 max-w-2xl mb-6">
-    Uma seleção minimalista dos projetos em vídeo. Clique em um card para assistir
-    e ver detalhes.
-  </p>
-
-  {loading ? (
-    <div className="min-h-[30vh] flex items-center justify-center">
-      <p className="text-sm text-neutral-500 tracking-[0.2em] uppercase">
-        Carregando vídeos...
+      <p className="text-neutral-300 text-lg leading-relaxed mb-10 max-w-lg">
+        Transformando momentos em experiências visuais marcantes.
+        Filmes, comerciais, documentários e vídeos criativos com estética moderna e profissional.
       </p>
+
+      <button
+        onClick={() => window.open('mailto:arturriegelph@gmail.com')}
+        className="
+          px-10 py-4 bg-white text-black text-base font-medium
+          rounded-full shadow-xl hover:bg-neutral-200 transition
+        "
+      >
+        Entrar em contato
+      </button>
     </div>
-  ) : videos.length === 0 ? (
-    <div className="min-h-[20vh] flex items-center justify-center">
-      <p className="text-sm text-neutral-500">
-        Nenhum vídeo cadastrado ainda. Acesse o dashboard para adicionar.
-      </p>
+
+    {/* FOTO */}
+    <div className="md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 z-10">
+      <img
+        src="/foto-riegel.png"
+        alt="Artur Riegel"
+        className="
+          h-[500px] md:h-[650px] lg:h-[750px]
+          object-contain
+          drop-shadow-[0_30px_120px_rgba(0,0,0,0.5)]
+        "
+      />
     </div>
-  ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {videos.map((video) => (
-        <VideoCard
-          key={video.id}
-          video={video}
-          onClick={() => setSelectedVideo(video)}
-        />
-      ))}
-    </div>
-  )}
-</section>
+
+  </section>
+
+</div>
 
 
-<section
-  className="
-    mt-10 p-8 rounded-3xl
-    bg-white/5 border border-white/10
-    backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
-    transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
-  "
->
-  <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-    Olhar estético
-  </p>
+      <section
+        className="
+          mt-14 mb-10 p-8 rounded-3xl
+          bg-white/5 border border-white/10
+          backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
+          transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
+        "
+      >
+        <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
+          Portfólio Audiovisual
+        </p>
 
-  <p className="text-sm text-neutral-400 max-w-2xl mb-6">
-    Uma seleção de fotos avulsas e projetos fotográficos.
-  </p>
+        <p className="text-sm text-neutral-400 max-w-2xl mb-6">
+          Uma seleção minimalista dos projetos em vídeo. Clique em um card para assistir
+          e ver detalhes.
+        </p>
 
-  <PhotoGrid />
-</section>
+        {loading ? (
+          <div className="min-h-[30vh] flex items-center justify-center">
+            <p className="text-sm text-neutral-500 tracking-[0.2em] uppercase">
+              Carregando vídeos...
+            </p>
+          </div>
+        ) : videos.length === 0 ? (
+          <div className="min-h-[20vh] flex items-center justify-center">
+            <p className="text-sm text-neutral-500">
+              Nenhum vídeo cadastrado ainda. Acesse o dashboard para adicionar.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {videos.map((video) => (
+              <VideoCard
+                key={video.id}
+                video={video}
+                onClick={() => setSelectedVideo(video)}
+              />
+            ))}
+          </div>
+        )}
+      </section>
 
-      
+      <section
+        className="
+          mt-10 p-8 rounded-3xl
+          bg-white/5 border border-white/10
+          backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
+          transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
+        "
+      >
+        <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
+          Olhar estético
+        </p>
+
+        <p className="text-sm text-neutral-400 max-w-2xl mb-6">
+          Uma seleção de fotos avulsas e projetos fotográficos.
+        </p>
+
+        <PhotoGrid />
+      </section>
+
+      {/* MODAL DE VÍDEO */}
       <VideoModal
         video={selectedVideo}
         onClose={() => setSelectedVideo(null)}
