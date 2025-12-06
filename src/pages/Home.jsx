@@ -45,8 +45,6 @@ export default function Home() {
 
   return (
     <>
-
-      {/* ⭐ FUNDO PRETO SOMENTE NO HEADER */}
       <div className="
         absolute
         top-0 left-0 right-0
@@ -55,24 +53,20 @@ export default function Home() {
         -z-50
       "></div>
 
-{/* ⭐ DEGRADÊ ABAIXO DO HEADER (FULL WIDTH) - ATRÁS DA IMAGEM */}
 <div className="
   absolute
   left-0 right-0
 
   top-[950px]        /* mobile: desce mais */
-  md:top-[870px]     /* desktop: padrão */
+  md:top-[840px]     /* desktop: padrão */
 
   h-[200px]
   bg-gradient-to-b
-  from-black/100 via-black/70 to-transparent
+  from-black/100 via-black/90 to-transparent
   -z-50              /* AGORA está abaixo da imagem */
 "></div>
 
-      {/* CONTEÚDO */}
       <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
-
-        {/* HERO */}
         <section
           className="
             relative
@@ -81,8 +75,6 @@ export default function Home() {
             flex flex-col md:flex-row items-center justify-between
           "
         >
-
-          {/* TEXTOS */}
           <div className="md:w-1/2 z-10">
             <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-8">
               Criação audiovisual<br />de alto impacto.
@@ -104,7 +96,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* FOTO */}
           <div className="md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 z-10">
             <img
               src="/foto-riegel.png"
@@ -118,7 +109,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEÇÃO DE VÍDEOS */}
         <section
           className="
             mt-14 mb-10 p-8 rounded-3xl
@@ -161,7 +151,6 @@ export default function Home() {
           )}
         </section>
 
-        {/* SEÇÃO DE FOTOS */}
         <section
           className="
             mt-10 p-8 rounded-3xl
