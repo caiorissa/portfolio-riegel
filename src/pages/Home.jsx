@@ -61,16 +61,13 @@ export default function Home() {
   left-0 right-0
 
   top-[950px]        /* mobile: desce mais */
-  md:top-[780px]     /* desktop: padrão */
+  md:top-[870px]     /* desktop: padrão */
 
   h-[200px]
   bg-gradient-to-b
   from-black/100 via-black/70 to-transparent
   -z-50              /* AGORA está abaixo da imagem */
 "></div>
-
-
-
 
       {/* CONTEÚDO */}
       <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
