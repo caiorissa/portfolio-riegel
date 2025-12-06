@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,7 +14,6 @@ import {
 import { signOut } from "firebase/auth";
 import { auth, db } from "../lib/firebaseConfig";
 
-// extrai ID do YouTube de qualquer link
 function extractYouTubeId(url) {
   try {
     if (!url.includes("http")) return url;
@@ -42,10 +40,6 @@ function extractYouTubeId(url) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-
-  
-  // ESTADOS VÍDEOS
-  
   const [title, setTitle] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -58,9 +52,6 @@ export default function Dashboard() {
   const [editDescription, setEditDescription] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
 
-  
-  // ESTADOS FOTOS AVULSAS
-  
   const [photoTitle, setPhotoTitle] = useState("");
   const [photoProject, setPhotoProject] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
@@ -68,8 +59,7 @@ export default function Dashboard() {
   const [submittingPhoto, setSubmittingPhoto] = useState(false);
   const [photos, setPhotos] = useState([]);
 
-  
-  // CARREGAR ITENS
+
   useEffect(() => {
     const unsubVideos = onSnapshot(
       query(collection(db, "videos"), orderBy("createdAt", "desc")),
@@ -86,8 +76,6 @@ export default function Dashboard() {
       unsubPhotos();
     };
   }, []);
-
-  // Quando começa edição de vídeo, preenche inputs
   useEffect(() => {
     if (!editingVideo) return;
 
@@ -100,9 +88,6 @@ export default function Dashboard() {
 
     setEditYoutubeUrl(fullUrl);
   }, [editingVideo]);
-
-  
-  // SALVAR VÍDEO — com thumbnail automática
   
 async function handleSubmitVideo(e) {
   e.preventDefault();
@@ -133,19 +118,11 @@ async function handleSubmitVideo(e) {
     setSubmittingVideo(false);
   }
 }
-
-
-
-  
-  // DELETAR VÍDEO
   
   async function handleDeleteVideo(id) {
     if (!window.confirm("Excluir este vídeo?")) return;
     await deleteDoc(doc(db, "videos", id));
   }
-
-  
-  // EDITAR VÍDEO — thumbnail automática também
   
   async function handleUpdateVideo(e) {
     e.preventDefault();
@@ -178,9 +155,6 @@ async function handleSubmitVideo(e) {
       setSavingEdit(false);
     }
   }
-
-  
-  // SALVAR FOTO AVULSA (URL normal)
   
   async function handleSubmitPhoto(e) {
     e.preventDefault();
@@ -217,20 +191,14 @@ async function handleSubmitVideo(e) {
     await deleteDoc(doc(db, "photos", id));
   }
   
-  // LOGOUT
-  
   async function handleLogout() {
     await signOut(auth);
     navigate("/", { replace: true });
   }
-
-  
-  // RENDER
   
   return (
     <div className="max-w-6xl mx-auto px-4 pt-28 pb-10 space-y-10">
       
-      {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-white">Painel administrativo</h1>
         <button
@@ -241,7 +209,6 @@ async function handleSubmitVideo(e) {
         </button>
       </div>
 
-      {/* FORMULÁRIO VÍDEOS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
         <h2 className="text-sm font-medium text-white">Vídeos</h2>
 
@@ -290,7 +257,6 @@ async function handleSubmitVideo(e) {
           </div>
         </form>
 
-        {/* LISTA VIDEOS */}
         <div className="space-y-3">
           {videos.map((video) => (
             <div
@@ -322,7 +288,6 @@ async function handleSubmitVideo(e) {
           ))}
         </div>
 
-        {/* EDIÇÃO */}
         {editingVideo && (
           <div className="p-4 border border-white/10 rounded-xl mt-4 bg-black">
             <h3 className="text-white text-sm mb-3">Editar vídeo</h3>
@@ -368,7 +333,6 @@ async function handleSubmitVideo(e) {
         )}
       </section>
 
-      {/* FOTOS AVULSAS */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
         <h2 className="text-sm font-medium text-white">Fotos avulsas</h2>
 

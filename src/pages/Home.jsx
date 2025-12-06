@@ -48,7 +48,7 @@ export default function Home() {
       <div className="
         absolute
         top-0 left-0 right-0
-        h-[900px]          /* altura do hero */
+        h-[900px]
         bg-black
         -z-50
       "></div>
@@ -57,13 +57,13 @@ export default function Home() {
   absolute
   left-0 right-0
 
-  top-[950px]        /* mobile: desce mais */
-  md:top-[840px]     /* desktop: padrão */
+  top-[950px]
+  md:top-[840px]
 
   h-[200px]
   bg-gradient-to-b
   from-black/100 via-black/90 to-transparent
-  -z-50              /* AGORA está abaixo da imagem */
+  -z-50
 "></div>
 
       <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
