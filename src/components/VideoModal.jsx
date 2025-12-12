@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 export default function VideoModal({ video, onClose }) {
   const [isVertical, setIsVertical] = useState(false);
 
-  // ESC para fechar
   useEffect(() => {
     const onEsc = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onEsc);
     return () => window.removeEventListener("keydown", onEsc);
   }, [onClose]);
 
-  // Detectar proporção real da thumb
   useEffect(() => {
     if (!video) return;
 
@@ -36,7 +34,6 @@ export default function VideoModal({ video, onClose }) {
         className="relative max-w-3xl w-full bg-neutral-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <h2 className="text-xs tracking-[0.2em] uppercase text-neutral-400">
             Detalhes do vídeo
@@ -49,7 +46,6 @@ export default function VideoModal({ video, onClose }) {
           </button>
         </div>
 
-        {/* PLAYER — AQUI ESTÁ A MÁGICA */}
         <div
           className={
             isVertical
@@ -75,7 +71,6 @@ export default function VideoModal({ video, onClose }) {
           />
         </div>
 
-        {/* Info */}
         <div className="px-4 py-4 flex flex-col gap-2">
           <h3 className="text-base font-semibold text-white">
             {video.title}

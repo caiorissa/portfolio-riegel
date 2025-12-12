@@ -6,7 +6,6 @@ export default function VideoCard({ video, onClick }) {
     return null;
   }
 
-  // thumb padrão do YouTube
   const thumbUrl = `https://img.youtube.com/vi/${video.youtubeId}/0.jpg`;
 
   return (
@@ -18,7 +17,6 @@ export default function VideoCard({ video, onClick }) {
                  hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
                  transition-all"
     >
-      {/* THUMBNAIL */}
       <div className="relative w-full aspect-video bg-black overflow-hidden">
         <img
           src={thumbUrl}
@@ -30,7 +28,6 @@ export default function VideoCard({ video, onClick }) {
         />
       </div>
 
-      {/* TEXTO */}
       <div className="p-4">
         <h3 className="text-white font-semibold text-sm md:text-base mb-1">
           {video.title}

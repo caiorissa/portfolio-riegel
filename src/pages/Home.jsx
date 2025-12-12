@@ -103,7 +103,6 @@ export default function Home() {
             flex flex-col md:flex-row items-center justify-between
           "
         >
-          {/* TEXTO */}
           <div className="md:w-1/2 z-10">
             <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-8">
               Criação audiovisual<br />de alto impacto.
@@ -173,9 +172,6 @@ export default function Home() {
           )}
         </section>
 
-        {/* ===============================
-            FOTOS
-           =============================== */}
         <section className="reveal mt-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
             Olhar estético
