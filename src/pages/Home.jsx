@@ -17,6 +17,44 @@ export default function Home() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [views, setViews] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = 2000000;
+    const duration = 900;
+    const increment = end / (duration / 16);
+
+    const counter = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setViews(end);
+        clearInterval(counter);
+      } else {
+        setViews(Math.floor(start));
+      }
+    }, 16);
+
+    return () => clearInterval(counter);
+  }, []);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const q = query(
@@ -35,46 +73,37 @@ export default function Home() {
         setVideos(list);
         setLoading(false);
       },
-      (error) => {
-        console.error("Erro ao carregar vídeos:", error);
-        setLoading(false);
-      }
+      () => setLoading(false)
     );
+
     return () => unsub();
   }, []);
 
   return (
     <>
+      <div className="absolute top-0 left-0 right-0 h-[900px] bg-black -z-50"></div>
+
+
       <div className="
-        absolute
-        top-0 left-0 right-0
-        h-[900px]
-        bg-black
+        absolute left-0 right-0
+        top-[950px] md:top-[840px]
+        h-[200px]
+        bg-gradient-to-b
+        from-black/100 via-black/90 to-transparent
         -z-50
       "></div>
-
-<div className="
-  absolute
-  left-0 right-0
-
-  top-[950px]
-  md:top-[840px]
-
-  h-[200px]
-  bg-gradient-to-b
-  from-black/100 via-black/90 to-transparent
-  -z-50
-"></div>
 
       <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
         <section
           className="
+            reveal
             relative
             max-w-6xl mx-auto px-4 md:px-10
             min-h-[90vh]
             flex flex-col md:flex-row items-center justify-between
           "
         >
+          {/* TEXTO */}
           <div className="md:w-1/2 z-10">
             <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-8">
               Criação audiovisual<br />de alto impacto.
@@ -86,7 +115,11 @@ export default function Home() {
             </p>
 
             <button
-              onClick={() => window.open('mailto:arturriegelph@gmail.com')}
+              onClick={() =>
+                window.open(
+                  "https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
+                )
+              }
               className="
                 px-10 py-4 bg-white text-black text-base font-medium
                 rounded-full shadow-xl hover:bg-neutral-200 transition
@@ -96,27 +129,22 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0 z-10">
-            <img
-              src="/foto-riegel.png"
-              alt="Artur Riegel"
-              className="
-                h-[500px] md:h-[650px] lg:h-[750px]
-                object-contain
-                drop-shadow-[0_30px_120px_rgba(0,0,0,0.5)]
-              "
-            />
+          <div className="reveal md:w-1/2 flex justify-center md:justify-end mt-20 md:mt-0 z-10">
+            <div className="floating-metric">
+              <div className="metric-number">
+                +{Math.floor(views / 1000000)} milhões
+              </div>
+              <div className="metric-label">
+                de visualizações geradas
+              </div>
+              <div className="metric-detail">
+                em projetos reais
+              </div>
+            </div>
           </div>
         </section>
 
-        <section
-          className="
-            mt-14 mb-10 p-8 rounded-3xl
-            bg-white/5 border border-white/10
-            backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
-            transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
-          "
-        >
+        <section className="reveal mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
             Portfólio Audiovisual
           </p>
@@ -128,14 +156,8 @@ export default function Home() {
 
           {loading ? (
             <div className="min-h-[30vh] flex items-center justify-center">
-              <p className="text-sm text-neutral-500 tracking-[0.2em] uppercase">
+              <p className="text-sm text-neutral-500 uppercase tracking-widest">
                 Carregando vídeos...
-              </p>
-            </div>
-          ) : videos.length === 0 ? (
-            <div className="min-h-[20vh] flex items-center justify-center">
-              <p className="text-sm text-neutral-500">
-                Nenhum vídeo cadastrado ainda. Acesse o dashboard para adicionar.
               </p>
             </div>
           ) : (
@@ -151,14 +173,10 @@ export default function Home() {
           )}
         </section>
 
-        <section
-          className="
-            mt-10 p-8 rounded-3xl
-            bg-white/5 border border-white/10
-            backdrop-blur-xl shadow-[0_0_40px_rgba(255,255,255,0.05)]
-            transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)]
-          "
-        >
+        {/* ===============================
+            FOTOS
+           =============================== */}
+        <section className="reveal mt-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
             Olhar estético
           </p>
