@@ -128,6 +128,7 @@ export default function Home() {
             </button>
           </div>
 
+
           <div className="reveal md:w-1/2 flex justify-center md:justify-end mt-20 md:mt-0 z-10">
             <div className="floating-metric">
               <div className="metric-number">
@@ -142,6 +143,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        
 
         <section className="reveal mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
@@ -160,30 +162,34 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              className="
+                -mx-4 px-4
+                flex gap-4 overflow-x-auto pb-2
+                snap-x snap-mandatory scroll-smooth
+                [scrollbar-width:none] [-ms-overflow-style:none]
+                sm:mx-0 sm:px-0 sm:overflow-x-visible sm:pb-0
+                sm:grid sm:grid-cols-2
+                lg:grid-cols-3
+              "
+            >
               {videos.map((video) => (
-                <VideoCard
+                <div
                   key={video.id}
-                  video={video}
-                  onClick={() => setSelectedVideo(video)}
-                />
+                  className="
+                    snap-start
+                    min-w-[85%] sm:min-w-0
+                  "
+                >
+                  <VideoCard
+                    video={video}
+                    onClick={() => setSelectedVideo(video)}
+                  />
+                </div>
               ))}
             </div>
           )}
         </section>
-
-        <section className="reveal mt-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
-          <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-            Olhar estético
-          </p>
-
-          <p className="text-sm text-neutral-400 max-w-2xl mb-6">
-            Uma seleção de fotos avulsas e projetos fotográficos.
-          </p>
-
-          <PhotoGrid />
-        </section>
-
         <VideoModal
           video={selectedVideo}
           onClose={() => setSelectedVideo(null)}
