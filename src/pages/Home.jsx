@@ -81,7 +81,7 @@ export default function Home() {
 
   return (
     <>
-      <div className="absolute top-0 left-0 right-0 h-[900px] bg-black -z-50"></div>
+      <div className="absolute top-0 left-0 right-0 h-[950px] bg-black -z-50"></div>
 
 
       <div className="
