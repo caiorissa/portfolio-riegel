@@ -9,10 +9,12 @@ import {
   serverTimestamp,
   deleteDoc,
   doc,
-  updateDoc
+  updateDoc,
+  setDoc
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../lib/firebaseConfig";
+import { useLang } from "../i18n/LanguageContext.jsx";
 
 function extractYouTubeId(url) {
   try {
@@ -40,6 +42,8 @@ function extractYouTubeId(url) {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { t } = useLang();
+
   const [title, setTitle] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -59,6 +63,10 @@ export default function Dashboard() {
   const [submittingPhoto, setSubmittingPhoto] = useState(false);
   const [photos, setPhotos] = useState([]);
 
+  const [viewsInput, setViewsInput] = useState("");
+  const [currentViews, setCurrentViews] = useState(null);
+  const [savingViews, setSavingViews] = useState(false);
+  const [viewsSavedMsg, setViewsSavedMsg] = useState(false);
 
   useEffect(() => {
     const unsubVideos = onSnapshot(
@@ -71,11 +79,21 @@ export default function Dashboard() {
       (snap) => setPhotos(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     );
 
+    const unsubViews = onSnapshot(doc(db, "settings", "views"), (snap) => {
+      if (snap.exists()) {
+        const count = snap.data().count;
+        setCurrentViews(count);
+        setViewsInput(String(count / 1000000));
+      }
+    });
+
     return () => {
       unsubVideos();
       unsubPhotos();
+      unsubViews();
     };
   }, []);
+
   useEffect(() => {
     if (!editingVideo) return;
 
@@ -88,42 +106,42 @@ export default function Dashboard() {
 
     setEditYoutubeUrl(fullUrl);
   }, [editingVideo]);
-  
-async function handleSubmitVideo(e) {
-  e.preventDefault();
-  setSubmittingVideo(true);
 
-  const youtubeId = extractYouTubeId(youtubeUrl);
+  async function handleSubmitVideo(e) {
+    e.preventDefault();
+    setSubmittingVideo(true);
 
-  if (!youtubeId) {
-    alert("O link do YouTube não é válido.");
-    setSubmittingVideo(false);
-    return;
+    const youtubeId = extractYouTubeId(youtubeUrl);
+
+    if (!youtubeId) {
+      alert(t.dashboard.invalidUrl);
+      setSubmittingVideo(false);
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "videos"), {
+        title: title.trim(),
+        youtubeId: youtubeId.trim(),
+        description: description.trim(),
+        createdAt: serverTimestamp(),
+      });
+
+      setTitle("");
+      setYoutubeUrl("");
+      setDescription("");
+    } catch (error) {
+      console.error("Erro ao salvar vídeo:", error);
+    } finally {
+      setSubmittingVideo(false);
+    }
   }
 
-  try {
-    await addDoc(collection(db, "videos"), {
-      title: title.trim(),
-      youtubeId: youtubeId.trim(),
-      description: description.trim(),
-      createdAt: serverTimestamp(),
-    });
-
-    setTitle("");
-    setYoutubeUrl("");
-    setDescription("");
-  } catch (error) {
-    console.error("Erro ao salvar vídeo:", error);
-  } finally {
-    setSubmittingVideo(false);
-  }
-}
-  
   async function handleDeleteVideo(id) {
-    if (!window.confirm("Excluir este vídeo?")) return;
+    if (!window.confirm(t.dashboard.deleteConfirm)) return;
     await deleteDoc(doc(db, "videos", id));
   }
-  
+
   async function handleUpdateVideo(e) {
     e.preventDefault();
     if (!editingVideo) return;
@@ -133,7 +151,7 @@ async function handleSubmitVideo(e) {
     const newId = extractYouTubeId(editYoutubeUrl);
 
     if (!newId) {
-      alert("Link inválido.");
+      alert(t.dashboard.invalidLink);
       setSavingEdit(false);
       return;
     }
@@ -155,7 +173,7 @@ async function handleSubmitVideo(e) {
       setSavingEdit(false);
     }
   }
-  
+
   async function handleSubmitPhoto(e) {
     e.preventDefault();
     setSubmittingPhoto(true);
@@ -190,31 +208,93 @@ async function handleSubmitVideo(e) {
     if (!window.confirm("Excluir foto?")) return;
     await deleteDoc(doc(db, "photos", id));
   }
-  
+
+  async function handleSaveViews(e) {
+    e.preventDefault();
+    setSavingViews(true);
+    setViewsSavedMsg(false);
+
+    const millions = parseFloat(viewsInput);
+    if (isNaN(millions) || millions < 0) {
+      setSavingViews(false);
+      return;
+    }
+
+    try {
+      await setDoc(doc(db, "settings", "views"), {
+        count: Math.round(millions * 1000000),
+      });
+      setViewsSavedMsg(true);
+      setTimeout(() => setViewsSavedMsg(false), 3000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingViews(false);
+    }
+  }
+
   async function handleLogout() {
     await signOut(auth);
     navigate("/", { replace: true });
   }
-  
+
   return (
     <div className="max-w-6xl mx-auto px-4 pt-28 pb-10 space-y-10">
-      
+
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">Painel administrativo</h1>
+        <h1 className="text-xl font-semibold text-white">{t.dashboard.title}</h1>
         <button
           onClick={handleLogout}
           className="px-3 py-2 text-xs border border-white/20 rounded-full hover:bg-white hover:text-black transition"
         >
-          Logout
+          {t.dashboard.logout}
         </button>
       </div>
 
+      {/* ── Views ── */}
+      <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-4">
+        <h2 className="text-sm font-medium text-white">{t.dashboard.views}</h2>
+
+        {currentViews != null && (
+          <p className="text-xs text-neutral-500">
+            {t.dashboard.currentViews}: <span className="text-white font-medium">{(currentViews / 1000000).toFixed(1)}M</span>
+          </p>
+        )}
+
+        <form onSubmit={handleSaveViews} className="flex items-end gap-3">
+          <div className="flex-1">
+            <label className="text-xs text-neutral-400">{t.dashboard.viewsLabel}</label>
+            <input
+              type="number"
+              step="0.1"
+              min="0"
+              value={viewsInput}
+              onChange={(e) => setViewsInput(e.target.value)}
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={savingViews}
+            className="px-4 py-2 text-xs bg-white text-black rounded-full whitespace-nowrap"
+          >
+            {savingViews ? t.dashboard.savingViews : t.dashboard.saveViews}
+          </button>
+        </form>
+
+        {viewsSavedMsg && (
+          <p className="text-xs text-green-400">{t.dashboard.viewsSaved}</p>
+        )}
+      </section>
+
+      {/* ── Videos ── */}
       <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
-        <h2 className="text-sm font-medium text-white">Vídeos</h2>
+        <h2 className="text-sm font-medium text-white">{t.dashboard.videos}</h2>
 
         <form onSubmit={handleSubmitVideo} className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="text-xs text-neutral-400">Título</label>
+            <label className="text-xs text-neutral-400">{t.dashboard.videoTitleLabel}</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -225,7 +305,7 @@ async function handleSubmitVideo(e) {
 
           <div className="md:col-span-2">
             <label className="text-xs text-neutral-400">
-              Link completo do YouTube
+              {t.dashboard.videoUrlLabel}
             </label>
             <input
               value={youtubeUrl}
@@ -237,7 +317,7 @@ async function handleSubmitVideo(e) {
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-xs text-neutral-400">Descrição</label>
+            <label className="text-xs text-neutral-400">{t.dashboard.videoDescLabel}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -252,7 +332,7 @@ async function handleSubmitVideo(e) {
               disabled={submittingVideo}
               className="px-4 py-2 text-xs bg-white text-black rounded-full"
             >
-              {submittingVideo ? "Salvando..." : "Salvar vídeo"}
+              {submittingVideo ? t.dashboard.saving : t.dashboard.saveVideo}
             </button>
           </div>
         </form>
@@ -275,14 +355,14 @@ async function handleSubmitVideo(e) {
                 onClick={() => setEditingVideo(video)}
                 className="px-3 py-1 text-xs border border-white/20 rounded-full"
               >
-                Editar
+                {t.dashboard.edit}
               </button>
 
               <button
                 onClick={() => handleDeleteVideo(video.id)}
                 className="px-3 py-1 text-xs bg-red-600 text-white rounded-full"
               >
-                Excluir
+                {t.dashboard.delete}
               </button>
             </div>
           ))}
@@ -290,7 +370,7 @@ async function handleSubmitVideo(e) {
 
         {editingVideo && (
           <div className="p-4 border border-white/10 rounded-xl mt-4 bg-black">
-            <h3 className="text-white text-sm mb-3">Editar vídeo</h3>
+            <h3 className="text-white text-sm mb-3">{t.dashboard.editVideoTitle}</h3>
 
             <form onSubmit={handleUpdateVideo} className="grid gap-3">
               <input
@@ -318,14 +398,14 @@ async function handleSubmitVideo(e) {
                   onClick={() => setEditingVideo(null)}
                   className="px-4 py-2 text-xs border border-white/20 rounded-full"
                 >
-                  Cancelar
+                  {t.dashboard.cancel}
                 </button>
                 <button
                   type="submit"
                   disabled={savingEdit}
                   className="px-4 py-2 text-xs bg-white text-black rounded-full"
                 >
-                  {savingEdit ? "Salvando..." : "Salvar"}
+                  {savingEdit ? t.dashboard.saving : t.dashboard.save}
                 </button>
               </div>
             </form>

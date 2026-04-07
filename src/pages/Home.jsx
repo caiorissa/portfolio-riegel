@@ -1,59 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import { motion } from "motion/react";
 import {
   collection,
   onSnapshot,
   orderBy,
   query,
-  limit
+  limit,
+  doc
 } from "firebase/firestore";
 import { db } from "../lib/firebaseConfig";
+import { useLang } from "../i18n/LanguageContext.jsx";
 import VideoCard from "../components/VideoCard.jsx";
 import VideoModal from "../components/VideoModal.jsx";
-import PhotoGrid from "../components/PhotoGrid.jsx";
+import BlurText from "../components/reactbits/BlurText.jsx";
+import CountUp from "../components/reactbits/CountUp.jsx";
+import ScrollReveal from "../components/reactbits/ScrollReveal.jsx";
 
 const MAX_VIDEOS = 15;
 
 export default function Home() {
+  const { lang, t } = useLang();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [views, setViews] = useState(0);
+  const [viewTarget, setViewTarget] = useState(2000000);
+
+  const heroCtaTransition = useMemo(() => {
+    const titleWords = t.hero.title.split(/\s+/).filter(Boolean).length;
+    const descWords = t.hero.description.split(/\s+/).filter(Boolean).length;
+    const delaySec = Math.min(2.5, 0.35 + titleWords * 0.04 + descWords * 0.028);
+    return {
+      delay: delaySec,
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1]
+    };
+  }, [lang, t.hero.title, t.hero.description]);
 
   useEffect(() => {
-    let start = 0;
-    const end = 2000000;
-    const duration = 900;
-    const increment = end / (duration / 16);
-
-    const counter = setInterval(() => {
-      start += increment;
-      if (start >= end) {
-        setViews(end);
-        clearInterval(counter);
-      } else {
-        setViews(Math.floor(start));
+    const unsub = onSnapshot(doc(db, "settings", "views"), (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.count != null) setViewTarget(data.count);
       }
-    }, 16);
-
-    return () => clearInterval(counter);
-  }, []);
-
-  useEffect(() => {
-    const elements = document.querySelectorAll(".reveal");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    });
+    return () => unsub();
   }, []);
 
   useEffect(() => {
@@ -79,10 +69,11 @@ export default function Home() {
     return () => unsub();
   }, []);
 
+  const viewMillions = viewTarget / 1000000;
+
   return (
     <>
       <div className="absolute top-0 left-0 right-0 h-[950px] bg-black -z-50"></div>
-
 
       <div className="
         absolute left-0 right-0
@@ -96,7 +87,6 @@ export default function Home() {
       <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
         <section
           className="
-            reveal
             relative
             max-w-6xl mx-auto px-4 md:px-10
             min-h-[90vh]
@@ -104,61 +94,101 @@ export default function Home() {
           "
         >
           <div className="md:w-1/2 z-10">
-            <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-8">
-              Criação audiovisual<br />de alto impacto.
-            </h1>
+            {t.hero.title.split("\n").map((line, i) => (
+              <BlurText
+                key={`${lang}-${i}`}
+                text={line}
+                delay={120}
+                animateBy="words"
+                direction="top"
+                className="text-5xl md:text-6xl font-bold text-white leading-tight"
+              />
+            ))}
+            <div className="mb-8" />
 
-            <p className="text-neutral-300 text-lg leading-relaxed mb-10 max-w-lg">
-              Transformando momentos em experiências visuais marcantes.
-              Filmes, comerciais, documentários e vídeos criativos com estética moderna e profissional.
-            </p>
+            <BlurText
+              key={`${lang}-desc`}
+              text={t.hero.description}
+              delay={30}
+              animateBy="words"
+              direction="top"
+              stepDuration={0.3}
+              className="text-neutral-300 text-lg leading-relaxed mb-10 max-w-lg"
+            />
 
-            <button
-              onClick={() =>
-                window.open(
-                  "https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
-                )
-              }
-              className="
-                px-10 py-4 bg-white text-black text-base font-medium
-                rounded-full shadow-xl hover:bg-neutral-200 transition
-              "
-            >
-              Entrar em contato
-            </button>
+            <div className="min-h-[3.25rem] flex flex-col items-start justify-start">
+              <motion.button
+                key={`hero-cta-${lang}`}
+                type="button"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4, margin: "0px 0px -8% 0px" }}
+                transition={heroCtaTransition}
+                whileTap={{ scale: 0.98 }}
+                onClick={() =>
+                  window.open(
+                    "https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
+                  )
+                }
+                className="
+                  relative inline-flex shrink-0 px-10 py-4 bg-white text-black text-base font-medium
+                  rounded-full shadow-xl hover:bg-neutral-200
+                  transition-colors duration-200
+                  will-change-transform
+                "
+              >
+                {t.hero.cta}
+              </motion.button>
+            </div>
           </div>
 
-
-          <div className="reveal md:w-1/2 flex justify-center md:justify-end mt-20 md:mt-0 z-10">
+          <div className="md:w-1/2 flex justify-center md:justify-end mt-20 md:mt-0 z-10">
             <div className="floating-metric">
               <div className="metric-number">
-                +{Math.floor(views / 1000000)} milhões
+                +<CountUp
+                  to={viewMillions}
+                  from={0}
+                  duration={1.5}
+                  delay={0.15}
+                  separator=""
+                  className="inline"
+                /> {t.hero.millionSuffix}
               </div>
               <div className="metric-label">
-                de visualizações geradas
+                {t.hero.metricLabel}
               </div>
               <div className="metric-detail">
-                em projetos reais
+                {t.hero.metricDetail}
               </div>
             </div>
           </div>
         </section>
-        
 
-        <section className="reveal mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
-          <p className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2">
-            Portfólio Audiovisual
-          </p>
+        <section className="mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
+          <ScrollReveal
+            baseRotation={2}
+            baseOpacity={0.15}
+            blurStrength={3}
+            containerClassName="mb-6"
+            textClassName="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500"
+          >
+            {t.portfolio.label}
+          </ScrollReveal>
 
-          <p className="text-sm text-neutral-400 max-w-2xl mb-6">
-            Uma seleção minimalista dos projetos em vídeo. Clique em um card para assistir
-            e ver detalhes.
-          </p>
+          <ScrollReveal
+            baseRotation={0}
+            baseOpacity={0.2}
+            blurStrength={2}
+            containerClassName="mb-6"
+            textClassName="text-sm text-neutral-400 max-w-2xl"
+          >
+            {t.portfolio.description}
+          </ScrollReveal>
 
           {loading ? (
             <div className="min-h-[30vh] flex items-center justify-center">
               <p className="text-sm text-neutral-500 uppercase tracking-widest">
-                Carregando vídeos...
+                {t.portfolio.loading}
               </p>
             </div>
           ) : (

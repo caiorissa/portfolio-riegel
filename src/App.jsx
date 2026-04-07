@@ -25,8 +25,8 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<NotFound />} />
           <Route path="/contato" element={<Contato />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </main>

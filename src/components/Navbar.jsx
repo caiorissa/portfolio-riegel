@@ -3,11 +3,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../lib/firebaseConfig";
 import { ADMIN_EMAIL } from "../lib/adminUser";
+import { useLang } from "../i18n/LanguageContext.jsx";
 import logo from "../assets/logoriegelsemfundo.png";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { lang, toggleLang, t } = useLang();
 
   const isHome = location.pathname === "/";
   const isDashboard = location.pathname === "/dashboard";
@@ -60,17 +62,17 @@ export default function Navbar() {
         <nav className="flex items-center gap-8 text-sm font-light">
 
           <PremiumLink to="/" active={isHome}>
-            Home
+            {t.nav.home}
           </PremiumLink>
           {isAdmin && (
             <PremiumLink to="/dashboard" active={isDashboard}>
-              Dashboard
+              {t.nav.dashboard}
             </PremiumLink>
           )}
 
           {!user && (
             <PremiumLink to="/login" active={false}>
-              Login
+              {t.nav.login}
             </PremiumLink>
           )}
 
@@ -79,14 +81,22 @@ export default function Navbar() {
               onClick={logout}
               className="text-neutral-400 hover:text-white transition pb-1 relative group"
             >
-              Logout
+              {t.nav.logout}
               <span className="absolute left-0 -bottom-[2px] h-[1.5px] w-0 opacity-0 bg-white transition-all duration-300 group-hover:w-full group-hover:opacity-100" />
             </button>
           )}
 
           <PremiumLink to="/contato" active={location.pathname === "/contato"}>
-            Contato
+            {t.nav.contact}
           </PremiumLink>
+
+          <button
+            onClick={toggleLang}
+            className="px-2.5 py-1 text-xs font-medium rounded-full border border-white/20 text-neutral-300 hover:bg-white hover:text-black transition"
+            title={lang === "pt-BR" ? "Switch to English" : "Mudar para Português"}
+          >
+            {lang === "pt-BR" ? "EN" : "PT"}
+          </button>
 
         </nav>
       </div>

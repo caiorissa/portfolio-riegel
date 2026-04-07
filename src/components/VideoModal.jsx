@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useLang } from "../i18n/LanguageContext.jsx";
 
 export default function VideoModal({ video, onClose }) {
+  const { t } = useLang();
   const [isVertical, setIsVertical] = useState(false);
 
   useEffect(() => {
@@ -36,13 +38,13 @@ export default function VideoModal({ video, onClose }) {
       >
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
           <h2 className="text-xs tracking-[0.2em] uppercase text-neutral-400">
-            Detalhes do vídeo
+            {t.videoModal.header}
           </h2>
           <button
             onClick={onClose}
             className="text-xs text-neutral-400 hover:text-white transition"
           >
-            Fechar ✕
+            {t.videoModal.close}
           </button>
         </div>
 

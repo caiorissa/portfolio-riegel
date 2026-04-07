@@ -1,8 +1,11 @@
 import React from "react";
 import { Mail, Instagram, ExternalLink, Youtube } from "lucide-react";
+import { useLang } from "../i18n/LanguageContext.jsx";
 import logo from "../assets/logoriegelsemfundo.png";
 
 export default function Contato() {
+  const { t } = useLang();
+
   return (
     <div className="relative min-h-screen flex items-center justify-center px-6 pt-28 pb-20">
       
@@ -17,15 +20,15 @@ export default function Contato() {
 
         <div className="space-y-4">
           <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
-            Entre em Contato
+            {t.contact.title}
           </h1>
 
           <p className="text-neutral-400 max-w-sm leading-relaxed">
-            Para orçamentos, parcerias e trabalhos audiovisuais, fale conosco diretamente.
+            {t.contact.description}
           </p>
 
           <p className="text-neutral-500 text-sm uppercase tracking-[0.25em] mt-4">
-            Roteirização • Produção • Edição • Resultado
+            {t.contact.tagline}
           </p>
         </div>
 
@@ -33,19 +36,19 @@ export default function Contato() {
 
           <ContactButton
             icon={<Instagram size={20} />}
-            label="Instagram"
+            label={t.contact.instagram}
             href="https://instagram.com/riegelfilms"
           />
 
           <ContactButton
             icon={<Mail size={20} />}
-            label="Enviar Email"
+            label={t.contact.email}
             href="https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
           />
          
           <ContactButton
             icon={<Youtube size={20} />}
-            label="Youtube"
+            label={t.contact.youtube}
             href="https://youtube.com/@riegelfilmss?si=XFGb7W6iy8E5QxCY"
           />
         </div>
@@ -71,4 +74,3 @@ function ContactButton({ icon, label, href }) {
     </a>
   );
 }
-
