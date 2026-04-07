@@ -14,7 +14,6 @@ import VideoCard from "../components/VideoCard.jsx";
 import VideoModal from "../components/VideoModal.jsx";
 import BlurText from "../components/reactbits/BlurText.jsx";
 import CountUp from "../components/reactbits/CountUp.jsx";
-import ScrollReveal from "../components/reactbits/ScrollReveal.jsx";
 
 const MAX_VIDEOS = 15;
 
@@ -72,19 +71,18 @@ export default function Home() {
   const viewMillions = viewTarget / 1000000;
 
   return (
-    <>
-      <div className="absolute top-0 left-0 right-0 h-[950px] bg-black -z-50"></div>
+    <div className="relative w-full">
+      {/* Preto no topo + fade longo até o portfólio; abaixo fica o background do html */}
+      <div
+        className="
+          pointer-events-none absolute left-1/2 top-0 z-0 w-screen max-w-none
+          -translate-x-1/2 min-h-[125vh] sm:min-h-[130vh]
+          bg-[linear-gradient(180deg,#000_0%,#000_38%,#000_50%,rgba(0,0,0,0.92)_60%,rgba(0,0,0,0.65)_72%,rgba(0,0,0,0.28)_84%,rgba(0,0,0,0)_100%)]
+        "
+        aria-hidden
+      />
 
-      <div className="
-        absolute left-0 right-0
-        top-[950px] md:top-[840px]
-        h-[200px]
-        bg-gradient-to-b
-        from-black/100 via-black/90 to-transparent
-        -z-50
-      "></div>
-
-      <div className="relative max-w-6xl mx-auto px-4 pt-28 pb-10 z-10">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 pt-28 pb-10">
         <section
           className="
             relative
@@ -148,8 +146,8 @@ export default function Home() {
                 +<CountUp
                   to={viewMillions}
                   from={0}
-                  duration={1.5}
-                  delay={0.15}
+                  duration={0.55}
+                  delay={0}
                   separator=""
                   className="inline"
                 /> {t.hero.millionSuffix}
@@ -164,26 +162,28 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
-          <ScrollReveal
-            baseRotation={2}
-            baseOpacity={0.15}
-            blurStrength={3}
-            containerClassName="mb-6"
-            textClassName="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500"
+        <section className="mt-14 mb-10 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+          <motion.p
+            key={`${lang}-portfolio-label`}
+            className="text-[0.75rem] tracking-[0.25em] uppercase text-neutral-500 mb-2"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
             {t.portfolio.label}
-          </ScrollReveal>
+          </motion.p>
 
-          <ScrollReveal
-            baseRotation={0}
-            baseOpacity={0.2}
-            blurStrength={2}
-            containerClassName="mb-6"
-            textClassName="text-sm text-neutral-400 max-w-2xl"
+          <motion.p
+            key={`${lang}-portfolio-desc`}
+            className="text-sm text-neutral-400 max-w-2xl mb-6"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+            transition={{ duration: 0.45, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
           >
             {t.portfolio.description}
-          </ScrollReveal>
+          </motion.p>
 
           {loading ? (
             <div className="min-h-[30vh] flex items-center justify-center">
@@ -225,6 +225,6 @@ export default function Home() {
           onClose={() => setSelectedVideo(null)}
         />
       </div>
-    </>
+    </div>
   );
 }

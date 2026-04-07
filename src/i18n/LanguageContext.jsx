@@ -5,23 +5,28 @@ const LanguageContext = createContext();
 
 const STORAGE_KEY = "portfolio-lang";
 
-function getInitialLang() {
+function readStoredLang() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved && translations[saved]) return saved;
-  } catch {}
+  } catch {
+    /* ignore */
+  }
   return "pt-BR";
 }
 
 export function LanguageProvider({ children }) {
-  const [lang, setLang] = useState(getInitialLang);
+  const [lang] = useState(readStoredLang);
 
   const toggleLang = useCallback(() => {
-    setLang((prev) => {
-      const next = prev === "pt-BR" ? "en" : "pt-BR";
-      try { localStorage.setItem(STORAGE_KEY, next); } catch {}
-      return next;
-    });
+    const prev = readStoredLang();
+    const next = prev === "pt-BR" ? "en" : "pt-BR";
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* ignore */
+    }
+    window.location.reload();
   }, []);
 
   const t = translations[lang];

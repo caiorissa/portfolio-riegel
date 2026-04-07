@@ -11,7 +11,9 @@ export default function CountUp({
   startWhen = true,
   separator = '',
   onStart,
-  onEnd
+  onEnd,
+  /** Expande a área de detecção (só px ou % — vh não é aceito pelo IntersectionObserver) */
+  inViewMargin = '0px 0px 50% 0px'
 }) {
   const rootRef = useRef(null);
   const textRef = useRef(null);
@@ -24,7 +26,11 @@ export default function CountUp({
 
   const springValue = useSpring(motionValue, { damping, stiffness });
 
-  const isInView = useInView(rootRef, { once: true, margin: '0px 0px -15% 0px' });
+  const isInView = useInView(rootRef, {
+    once: true,
+    margin: inViewMargin,
+    amount: 0.01
+  });
 
   const getDecimalPlaces = (num) => {
     const str = String(num);

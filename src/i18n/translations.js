@@ -6,6 +6,9 @@ export const translations = {
       login: "Login",
       logout: "Logout",
       contact: "Contato",
+      openMenu: "Abrir menu",
+      closeMenu: "Fechar menu",
+      menuTitle: "Navegação",
     },
     hero: {
       title: "Criação audiovisual\nde alto impacto.",
@@ -86,6 +89,9 @@ export const translations = {
       login: "Login",
       logout: "Logout",
       contact: "Contact",
+      openMenu: "Open menu",
+      closeMenu: "Close menu",
+      menuTitle: "Navigation",
     },
     hero: {
       title: "High-impact\naudiovisual creation.",

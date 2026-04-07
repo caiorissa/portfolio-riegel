@@ -11,7 +11,7 @@ import Footer from "./components/Footer.jsx";
 
 export default function App() {
   return (
-    <div className="min-h-screen text-white flex flex-col">
+    <div className="min-h-screen text-white flex flex-col overflow-x-hidden max-w-[100vw]">
       <Navbar />
       <main className="flex-1">
         <Routes>
