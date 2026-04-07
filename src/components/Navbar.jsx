@@ -6,6 +6,7 @@ import { auth } from "../lib/firebaseConfig";
 import { ADMIN_EMAIL } from "../lib/adminUser";
 import { useLang } from "../i18n/LanguageContext.jsx";
 import logo from "../assets/logoriegelsemfundo.png";
+import GlassSurface from "./reactbits/GlassSurface.jsx";
 
 const MOBILE_NAV_MQ = "(max-width: 767.98px)";
 
@@ -96,15 +97,30 @@ export default function Navbar() {
       <header
         translate="no"
         className={
-          "notranslate fixed w-full max-w-[100vw] left-0 right-0 top-0 z-[60] overflow-x-hidden transition-all duration-300 " +
-          (shrink
-            ? "py-2 rounded-3xl transition hover:shadow-[0_0_60px_rgba(255,255,255,0.08)] backdrop-blur-xl border-b border-white/5"
-            : "py-3 md:py-4 backdrop-blur-lg border-b border-white/10")
+          "notranslate fixed w-full max-w-[100vw] left-0 right-0 top-0 z-[60] overflow-x-hidden transition-all duration-300 px-3 sm:px-4 " +
+          (shrink ? "py-2" : "py-3 md:py-4")
         }
       >
+        <GlassSurface
+          width="100%"
+          height="auto"
+          borderRadius={shrink ? 22 : 26}
+          borderWidth={0.06}
+          blur={12}
+          backgroundOpacity={0.4}
+          saturation={0.5}
+          brightness={50}
+          opacity={0.8}
+          darkMode
+          className={
+            "max-w-6xl mx-auto w-full min-h-0 !items-stretch " +
+            (shrink ? "transition hover:shadow-[0_0_48px_rgba(255,255,255,0.06)]" : "")
+          }
+          contentClassName="!items-center !justify-between w-full min-h-[48px] md:min-h-[56px] px-2 sm:px-3 py-1.5 md:py-2"
+        >
         <div
           className="
-            max-w-6xl mx-auto px-3 sm:px-4 w-full min-w-0
+            w-full min-w-0
             flex md:grid md:grid-cols-[auto_minmax(0,1fr)_auto]
             items-center gap-2 md:gap-4
             justify-between
@@ -157,7 +173,7 @@ export default function Navbar() {
             </PremiumLink>
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 justify-self-end relative z-[61] bg-black/80 md:bg-transparent md:backdrop-blur-none rounded-lg md:rounded-none py-0.5 md:py-0 pl-1 md:pl-0 -mr-0.5 md:mr-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 justify-self-end relative z-[61] py-0.5 md:py-0 pl-1 md:pl-0 -mr-0.5 md:mr-0">
             <button
               type="button"
               translate="no"
@@ -182,6 +198,7 @@ export default function Navbar() {
             )}
           </div>
         </div>
+        </GlassSurface>
       </header>
 
       {isMobileNav && (
