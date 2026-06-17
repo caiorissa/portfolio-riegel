@@ -139,8 +139,8 @@ export default function Home() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() =>
-                    window.open(
-                      "https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
+                    window.location.assign(
+                      "/contato",
                     )
                   }
                   className="group inline-flex items-center gap-space-2 rounded-pill bg-white px-space-6 py-space-3
