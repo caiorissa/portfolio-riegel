@@ -5,6 +5,10 @@ import { LanguageProvider } from "./i18n/LanguageContext.jsx";
 import App from "./App.jsx";
 import "./styles/globals.css";
 
+if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>

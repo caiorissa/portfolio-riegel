@@ -36,40 +36,38 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center px-4 py-10 pt-48 pb-10">
-      <div className="w-full max-w-sm bg-neutral-950 border border-white/10 rounded-2xl px-5 py-6 shadow-xl">
-        <p className="text-[0.7rem] tracking-[0.25em] uppercase text-neutral-500 mb-3 text-center">
-          {t.login.label}
-        </p>
+    <div className="flex items-center justify-center px-space-4 pt-space-10 pb-space-8">
+      <div className="w-full max-w-sm glass-panel rounded-lg px-space-5 py-space-6 shadow-md">
+        <p className="eyebrow mb-space-5 text-center">{t.login.label}</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs text-neutral-400">{t.login.emailLabel}</label>
+        <form onSubmit={handleSubmit} className="space-y-space-4">
+          <div className="space-y-space-1">
+            <label className="text-fluid--1 text-muted">{t.login.emailLabel}</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
+              className="w-full bg-bg-elevated border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
               placeholder="admin@example.com"
             />
           </div>
 
-          <div className="space-y-1">
-            <label className="text-xs text-neutral-400">{t.login.passwordLabel}</label>
+          <div className="space-y-space-1">
+            <label className="text-fluid--1 text-muted">{t.login.passwordLabel}</label>
             <input
               type="password"
               required
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-white/40"
+              className="w-full bg-bg-elevated border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <p className="text-xs text-red-400 bg-red-950/40 border border-red-900/50 rounded-md px-3 py-2 mt-1">
+            <p className="text-fluid--1 text-red-400 bg-red-950/40 border border-red-900/50 rounded-md px-space-3 py-space-2">
               {error}
             </p>
           )}
@@ -77,7 +75,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full mt-2 text-sm font-medium bg-white text-black rounded-lg py-2.5 disabled:opacity-60 disabled:cursor-not-allowed hover:bg-neutral-100 transition"
+            className="w-full mt-space-2 text-fluid--1 uppercase tracking-[0.16em] font-medium bg-white text-black rounded-pill py-space-3 disabled:opacity-60 disabled:cursor-not-allowed hover:bg-accent hover:shadow-glow transition-all"
           >
             {submitting ? t.login.submitting : t.login.submit}
           </button>

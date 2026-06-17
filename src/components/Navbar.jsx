@@ -7,6 +7,8 @@ import { ADMIN_EMAIL } from "../lib/adminUser";
 import { useLang } from "../i18n/LanguageContext.jsx";
 import logo from "../assets/logoriegelsemfundo.png";
 import GlassSurface from "./reactbits/GlassSurface.jsx";
+import LangSwitcher from "./LangSwitcher.jsx";
+import { scrollPageToTop } from "./ScrollToTop.jsx";
 
 const MOBILE_NAV_MQ = "(max-width: 767.98px)";
 
@@ -29,7 +31,7 @@ function useIsMobileNav() {
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { lang, toggleLang, t } = useLang();
+  const { t } = useLang();
   const isMobileNav = useIsMobileNav();
 
   const isHome = location.pathname === "/";
@@ -56,6 +58,8 @@ export default function Navbar() {
 
   useEffect(() => {
     setMenuOpen(false);
+    setShrink(false);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [location.pathname]);
 
   useEffect(() => {
@@ -142,7 +146,7 @@ export default function Navbar() {
           </Link>
 
           <nav
-            className="hidden md:flex flex-row flex-wrap justify-end items-center gap-x-4 lg:gap-x-6 gap-y-1 min-w-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1"
+            className="hidden md:flex flex-row flex-wrap justify-end items-center gap-x-6 lg:gap-x-8 gap-y-1 min-w-0 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1"
             aria-label="Main"
           >
             <PremiumLink to="/" active={isHome}>
@@ -162,27 +166,29 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={logout}
-                className="text-neutral-400 hover:text-white transition pb-1 relative group whitespace-nowrap shrink-0"
+                className="relative group pb-1 text-fluid--1 font-medium tracking-[0.01em] text-muted hover:text-content transition whitespace-nowrap shrink-0"
               >
                 {t.nav.logout}
-                <span className="absolute left-0 -bottom-[2px] h-[1.5px] w-0 opacity-0 bg-white transition-all duration-300 group-hover:w-full group-hover:opacity-100" />
+                <span className="pointer-events-none absolute left-0 -bottom-[2px] h-[1.5px] w-0 opacity-0 bg-accent transition-all duration-300 group-hover:w-full group-hover:opacity-100" />
               </button>
             )}
-            <PremiumLink to="/contato" active={location.pathname === "/contato"}>
-              {t.nav.contact}
-            </PremiumLink>
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 justify-self-end relative z-[61] py-0.5 md:py-0 pl-1 md:pl-0 -mr-0.5 md:mr-0">
-            <button
-              type="button"
-              translate="no"
-              onClick={toggleLang}
-              className="notranslate px-2.5 py-1.5 text-xs font-medium rounded-full border border-white/20 text-neutral-300 hover:bg-white hover:text-black transition touch-manipulation [text-decoration:none]"
-              title={lang === "pt-BR" ? "Switch to English" : "Mudar para Português"}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0 justify-self-end relative z-[61] py-0.5 md:py-0 pl-1 md:pl-0 -mr-0.5 md:mr-0">
+            <Link
+              to="/contato"
+              onClick={scrollPageToTop}
+              className={
+                "hidden md:inline-flex items-center rounded-pill px-5 py-2 text-fluid--1 font-semibold tracking-[0.01em] transition-all duration-200 whitespace-nowrap [text-decoration:none] " +
+                (location.pathname === "/contato"
+                  ? "bg-accent text-bg shadow-glow"
+                  : "bg-white text-black hover:bg-accent hover:shadow-glow")
+              }
             >
-              {lang === "pt-BR" ? "EN" : "PT"}
-            </button>
+              {t.nav.contact}
+            </Link>
+
+            <LangSwitcher compact={isMobileNav} />
 
             {isMobileNav && (
               <button
@@ -256,14 +262,14 @@ function PremiumLink({ to, active, children }) {
     <Link
       to={to}
       className={
-        "relative pb-1 transition text-neutral-400 hover:text-white group whitespace-nowrap shrink-0 [text-decoration:none] " +
-        (active ? "text-white" : "")
+        "relative pb-1 text-fluid--1 font-medium tracking-[0.01em] transition group whitespace-nowrap shrink-0 [text-decoration:none] " +
+        (active ? "text-content" : "text-muted hover:text-content")
       }
     >
       {children}
       <span
         className={
-          "pointer-events-none absolute left-0 -bottom-[2px] h-[1.5px] bg-white block transition-all duration-300 " +
+          "pointer-events-none absolute left-0 -bottom-[2px] h-[1.5px] bg-accent block transition-all duration-300 " +
           (active
             ? "w-full opacity-100"
             : "w-0 opacity-0 group-hover:w-full group-hover:opacity-100")
@@ -279,8 +285,8 @@ function MobileNavLink({ to, active, onNavigate, children }) {
       to={to}
       onClick={onNavigate}
       className={
-        "block py-3.5 text-base border-b border-white/10 transition [text-decoration:none] " +
-        (active ? "text-white font-medium" : "text-neutral-300 hover:text-white")
+        "block py-4 text-fluid-1 font-medium tracking-[0.01em] border-b border-border transition [text-decoration:none] " +
+        (active ? "text-content" : "text-muted hover:text-content")
       }
     >
       {children}

@@ -45,6 +45,7 @@ export default function Dashboard() {
   const { t } = useLang();
 
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [description, setDescription] = useState("");
   const [submittingVideo, setSubmittingVideo] = useState(false);
@@ -52,6 +53,7 @@ export default function Dashboard() {
 
   const [editingVideo, setEditingVideo] = useState(null);
   const [editTitle, setEditTitle] = useState("");
+  const [editCategory, setEditCategory] = useState("");
   const [editYoutubeUrl, setEditYoutubeUrl] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
@@ -98,6 +100,7 @@ export default function Dashboard() {
     if (!editingVideo) return;
 
     setEditTitle(editingVideo.title || "");
+    setEditCategory(editingVideo.category || "");
     setEditDescription(editingVideo.description || "");
 
     const fullUrl = editingVideo.youtubeId
@@ -122,12 +125,14 @@ export default function Dashboard() {
     try {
       await addDoc(collection(db, "videos"), {
         title: title.trim(),
+        category: category.trim() || null,
         youtubeId: youtubeId.trim(),
         description: description.trim(),
         createdAt: serverTimestamp(),
       });
 
       setTitle("");
+      setCategory("");
       setYoutubeUrl("");
       setDescription("");
     } catch (error) {
@@ -161,6 +166,7 @@ export default function Dashboard() {
     try {
       await updateDoc(doc(db, "videos", editingVideo.id), {
         title: editTitle.trim(),
+        category: editCategory.trim() || null,
         description: editDescription.trim(),
         youtubeId: newId,
         thumbnailUrl: newThumb
@@ -239,45 +245,45 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-28 pb-10 space-y-10">
+    <div className="max-w-6xl mx-auto px-space-4 pt-space-10 pb-space-8 space-y-space-7">
 
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">{t.dashboard.title}</h1>
+        <h1 className="font-display uppercase text-fluid-3 text-content">{t.dashboard.title}</h1>
         <button
           onClick={handleLogout}
-          className="px-3 py-2 text-xs border border-white/20 rounded-full hover:bg-white hover:text-black transition"
+          className="px-space-3 py-space-2 text-fluid--1 uppercase tracking-[0.14em] border border-border-strong rounded-pill text-muted hover:bg-white hover:text-black transition"
         >
           {t.dashboard.logout}
         </button>
       </div>
 
       {/* ── Views ── */}
-      <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-4">
-        <h2 className="text-sm font-medium text-white">{t.dashboard.views}</h2>
+      <section className="bg-bg-elevated border border-border rounded-lg p-space-5 space-y-space-4">
+        <h2 className="eyebrow">{t.dashboard.views}</h2>
 
         {currentViews != null && (
-          <p className="text-xs text-neutral-500">
-            {t.dashboard.currentViews}: <span className="text-white font-medium">{(currentViews / 1000000).toFixed(1)}M</span>
+          <p className="text-fluid--1 text-subtle">
+            {t.dashboard.currentViews}: <span className="text-content font-medium">{(currentViews / 1000000).toFixed(1)}M</span>
           </p>
         )}
 
         <form onSubmit={handleSaveViews} className="flex items-end gap-3">
           <div className="flex-1">
-            <label className="text-xs text-neutral-400">{t.dashboard.viewsLabel}</label>
+            <label className="text-fluid--1 text-muted">{t.dashboard.viewsLabel}</label>
             <input
               type="number"
               step="0.1"
               min="0"
               value={viewsInput}
               onChange={(e) => setViewsInput(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
               required
             />
           </div>
           <button
             type="submit"
             disabled={savingViews}
-            className="px-4 py-2 text-xs bg-white text-black rounded-full whitespace-nowrap"
+            className="px-space-5 py-space-2 text-fluid--1 uppercase tracking-[0.14em] bg-white text-black rounded-pill whitespace-nowrap hover:bg-accent transition"
           >
             {savingViews ? t.dashboard.savingViews : t.dashboard.saveViews}
           </button>
@@ -289,40 +295,50 @@ export default function Dashboard() {
       </section>
 
       {/* ── Videos ── */}
-      <section className="bg-neutral-950 border border-white/10 rounded-2xl p-5 space-y-5">
-        <h2 className="text-sm font-medium text-white">{t.dashboard.videos}</h2>
+      <section className="bg-bg-elevated border border-border rounded-lg p-space-5 space-y-space-5">
+        <h2 className="eyebrow">{t.dashboard.videos}</h2>
 
         <form onSubmit={handleSubmitVideo} className="grid gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
-            <label className="text-xs text-neutral-400">{t.dashboard.videoTitleLabel}</label>
+            <label className="text-fluid--1 text-muted">{t.dashboard.videoTitleLabel}</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
               required
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-xs text-neutral-400">
+            <label className="text-fluid--1 text-muted">{t.dashboard.videoCategoryLabel}</label>
+            <input
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder={t.dashboard.videoCategoryPlaceholder}
+              className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="text-fluid--1 text-muted">
               {t.dashboard.videoUrlLabel}
             </label>
             <input
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
               type="url"
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
+              className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
               required
             />
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-xs text-neutral-400">{t.dashboard.videoDescLabel}</label>
+            <label className="text-fluid--1 text-muted">{t.dashboard.videoDescLabel}</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm resize-none"
+              className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content resize-none focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
             />
           </div>
 
@@ -330,7 +346,7 @@ export default function Dashboard() {
             <button
               type="submit"
               disabled={submittingVideo}
-              className="px-4 py-2 text-xs bg-white text-black rounded-full"
+              className="px-space-5 py-space-2 text-fluid--1 uppercase tracking-[0.14em] bg-white text-black rounded-pill hover:bg-accent transition"
             >
               {submittingVideo ? t.dashboard.saving : t.dashboard.saveVideo}
             </button>
@@ -341,26 +357,31 @@ export default function Dashboard() {
           {videos.map((video) => (
             <div
               key={video.id}
-              className="flex items-center gap-3 bg-black p-3 rounded-xl border border-white/10"
+              className="flex items-center gap-space-3 bg-bg p-space-3 rounded-md border border-border"
             >
               <img
                 src={video.thumbnailUrl}
-                className="w-28 h-20 rounded-md object-cover"
+                className="w-28 h-20 rounded-sm object-cover"
               />
-              <div className="flex-1">
-                <p className="text-white text-sm">{video.title}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-content text-fluid--1 truncate">{video.title}</p>
+                {video.category && (
+                  <p className="text-subtle text-[0.7rem] uppercase tracking-[0.14em] mt-0.5 truncate">
+                    {video.category}
+                  </p>
+                )}
               </div>
 
               <button
                 onClick={() => setEditingVideo(video)}
-                className="px-3 py-1 text-xs border border-white/20 rounded-full"
+                className="px-space-3 py-space-1 text-fluid--1 uppercase tracking-[0.12em] border border-border-strong rounded-pill text-muted hover:text-content transition"
               >
                 {t.dashboard.edit}
               </button>
 
               <button
                 onClick={() => handleDeleteVideo(video.id)}
-                className="px-3 py-1 text-xs bg-red-600 text-white rounded-full"
+                className="px-space-3 py-space-1 text-fluid--1 uppercase tracking-[0.12em] bg-red-600 text-white rounded-pill hover:bg-red-500 transition"
               >
                 {t.dashboard.delete}
               </button>
@@ -369,41 +390,60 @@ export default function Dashboard() {
         </div>
 
         {editingVideo && (
-          <div className="p-4 border border-white/10 rounded-xl mt-4 bg-black">
-            <h3 className="text-white text-sm mb-3">{t.dashboard.editVideoTitle}</h3>
+          <div className="p-space-4 border border-border rounded-md mt-space-4 bg-bg">
+            <h3 className="eyebrow mb-space-3">{t.dashboard.editVideoTitle}</h3>
 
             <form onSubmit={handleUpdateVideo} className="grid gap-3">
-              <input
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
-              />
+              <div>
+                <label className="text-fluid--1 text-muted">{t.dashboard.videoTitleLabel}</label>
+                <input
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+                />
+              </div>
 
-              <input
-                value={editYoutubeUrl}
-                onChange={(e) => setEditYoutubeUrl(e.target.value)}
-                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm"
-              />
+              <div>
+                <label className="text-fluid--1 text-muted">{t.dashboard.videoCategoryLabel}</label>
+                <input
+                  value={editCategory}
+                  onChange={(e) => setEditCategory(e.target.value)}
+                  placeholder={t.dashboard.videoCategoryPlaceholder}
+                  className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+                />
+              </div>
 
-              <textarea
-                value={editDescription}
-                rows={3}
-                onChange={(e) => setEditDescription(e.target.value)}
-                className="bg-black border border-white/10 rounded-lg px-3 py-2 text-sm resize-none"
-              />
+              <div>
+                <label className="text-fluid--1 text-muted">{t.dashboard.videoUrlLabel}</label>
+                <input
+                  value={editYoutubeUrl}
+                  onChange={(e) => setEditYoutubeUrl(e.target.value)}
+                  className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+                />
+              </div>
+
+              <div>
+                <label className="text-fluid--1 text-muted">{t.dashboard.videoDescLabel}</label>
+                <textarea
+                  value={editDescription}
+                  rows={3}
+                  onChange={(e) => setEditDescription(e.target.value)}
+                  className="w-full bg-bg border border-border rounded-md px-space-3 py-space-2 text-fluid--1 text-content resize-none focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition"
+                />
+              </div>
 
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingVideo(null)}
-                  className="px-4 py-2 text-xs border border-white/20 rounded-full"
+                  className="px-space-5 py-space-2 text-fluid--1 uppercase tracking-[0.14em] border border-border-strong rounded-pill text-muted hover:text-content transition"
                 >
                   {t.dashboard.cancel}
                 </button>
                 <button
                   type="submit"
                   disabled={savingEdit}
-                  className="px-4 py-2 text-xs bg-white text-black rounded-full"
+                  className="px-space-5 py-space-2 text-fluid--1 uppercase tracking-[0.14em] bg-white text-black rounded-pill hover:bg-accent transition"
                 >
                   {savingEdit ? t.dashboard.saving : t.dashboard.save}
                 </button>

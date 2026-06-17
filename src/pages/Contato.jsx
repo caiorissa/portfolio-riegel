@@ -7,52 +7,42 @@ export default function Contato() {
   const { t } = useLang();
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-6 pt-28 pb-20">
-      
+    <div className="relative min-h-[100dvh] px-space-5 pt-32 md:pt-36 pb-space-9">
       <img
         src={logo}
         alt="Riegel"
-        className="absolute opacity-[0.06] w-[60vw] max-w-[550px] select-none pointer-events-none"
-        style={{ top: "12%", left: "50%", transform: "translateX(-50%)" }}
+        className="absolute opacity-[0.05] w-[60vw] max-w-[550px] select-none pointer-events-none"
+        style={{ top: "18%", left: "50%", transform: "translateX(-50%)" }}
       />
 
-      <div className="relative max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center z-10">
-
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-semibold text-white leading-tight">
+      <div className="relative z-10 max-w-4xl mx-auto grid md:grid-cols-2 gap-space-8 items-center min-h-[calc(100dvh-10rem)]">
+        <div className="space-y-space-4">
+          <p className="eyebrow">{t.contact.tagline}</p>
+          <h1 className="font-display uppercase text-fluid-5 leading-[0.95] text-content">
             {t.contact.title}
           </h1>
-
-          <p className="text-neutral-400 max-w-sm leading-relaxed">
+          <p className="max-w-sm text-fluid-0 leading-relaxed text-muted">
             {t.contact.description}
-          </p>
-
-          <p className="text-neutral-500 text-sm uppercase tracking-[0.25em] mt-4">
-            {t.contact.tagline}
           </p>
         </div>
 
-        <div className="bg-white/[0.04] backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 space-y-5">
-
+        <div className="glass-panel rounded-lg shadow-md p-space-5 space-y-space-4">
           <ContactButton
             icon={<Instagram size={20} />}
             label={t.contact.instagram}
             href="https://instagram.com/riegelfilms"
           />
-
           <ContactButton
             icon={<Mail size={20} />}
             label={t.contact.email}
             href="https://mail.google.com/mail/?view=cm&fs=1&to=arturriegelph@gmail.com"
           />
-         
           <ContactButton
             icon={<Youtube size={20} />}
             label={t.contact.youtube}
             href="https://youtube.com/@riegelfilmss?si=XFGb7W6iy8E5QxCY"
           />
         </div>
-
       </div>
     </div>
   );
@@ -63,14 +53,15 @@ function ContactButton({ icon, label, href }) {
     <a
       href={href}
       target="_blank"
-      className="flex items-center justify-between w-full bg-black border border-white/10 py-3 px-4
-                 rounded-xl text-white hover:bg-white hover:text-black transition group"
+      rel="noreferrer"
+      className="group flex items-center justify-between w-full bg-bg-elevated border border-border py-space-3 px-space-4
+                 rounded-md text-content hover:bg-accent hover:text-black hover:border-accent transition-all duration-200"
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-space-3">
         {icon}
-        <span className="text-sm">{label}</span>
+        <span className="text-fluid--1 uppercase tracking-[0.14em]">{label}</span>
       </div>
-      <ExternalLink size={18} className="opacity-60 group-hover:opacity-100" />
+      <ExternalLink size={18} className="opacity-60 group-hover:opacity-100 transition-opacity" />
     </a>
   );
 }

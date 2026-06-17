@@ -29,20 +29,18 @@ export default function VideoModal({ video, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
+      className="fixed inset-0 z-40 flex items-center justify-center bg-black/80 backdrop-blur-md px-space-4 animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="relative max-w-3xl w-full bg-neutral-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="relative max-w-3xl w-full bg-bg-elevated border border-border rounded-lg overflow-hidden shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-          <h2 className="text-xs tracking-[0.2em] uppercase text-neutral-400">
-            {t.videoModal.header}
-          </h2>
+        <div className="flex items-center justify-between px-space-4 py-space-3 border-b border-border">
+          <h2 className="eyebrow">{t.videoModal.header}</h2>
           <button
             onClick={onClose}
-            className="text-xs text-neutral-400 hover:text-white transition"
+            className="text-fluid--1 text-muted hover:text-content transition"
           >
             {t.videoModal.close}
           </button>
@@ -73,11 +71,14 @@ export default function VideoModal({ video, onClose }) {
           />
         </div>
 
-        <div className="px-4 py-4 flex flex-col gap-2">
-          <h3 className="text-base font-semibold text-white">
+        <div className="px-space-4 py-space-4 flex flex-col gap-space-2">
+          <p className="eyebrow text-accent/90">
+            {video.category?.trim() || t.portfolio.defaultCategory}
+          </p>
+          <h3 className="font-display uppercase text-fluid-1 text-content">
             {video.title}
           </h3>
-          <p className="text-sm text-neutral-300 whitespace-pre-line">
+          <p className="text-fluid--1 text-muted whitespace-pre-line">
             {video.description}
           </p>
         </div>

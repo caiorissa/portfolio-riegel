@@ -18,21 +18,24 @@ function readStoredLang() {
 export function LanguageProvider({ children }) {
   const [lang] = useState(readStoredLang);
 
-  const toggleLang = useCallback(() => {
-    const prev = readStoredLang();
-    const next = prev === "pt-BR" ? "en" : "pt-BR";
+  const setLang = useCallback((next) => {
+    if (next === lang || !translations[next]) return;
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
       /* ignore */
     }
     window.location.reload();
-  }, []);
+  }, [lang]);
+
+  const toggleLang = useCallback(() => {
+    setLang(lang === "pt-BR" ? "en" : "pt-BR");
+  }, [lang, setLang]);
 
   const t = translations[lang];
 
   return (
-    <LanguageContext.Provider value={{ lang, toggleLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang, toggleLang, t }}>
       {children}
     </LanguageContext.Provider>
   );

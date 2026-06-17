@@ -33,41 +33,36 @@ export default function PhotoGrid() {
   return (
     <div className="w-full">
       {loading && (
-        <p className="text-sm text-neutral-500 text-center py-10">
-          Carregando fotos...
-        </p>
+        <p className="eyebrow text-center py-space-7">Carregando fotos...</p>
       )}
 
       {!loading && photos.length === 0 && (
-        <p className="text-sm text-neutral-500 text-center py-10">
+        <p className="text-fluid--1 text-subtle text-center py-space-7">
           Nenhuma foto cadastrada ainda. Acesse o dashboard para adicionar.
         </p>
       )}
 
-
       {!loading && photos.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-space-4">
           {photos.map((photo) => (
             <div
               key={photo.id}
-              className="group relative rounded-xl overflow-hidden bg-black border border-white/10 cursor-pointer"
+              className="group relative rounded-md overflow-hidden bg-bg border border-border cursor-pointer transition-all duration-300 hover:border-border-strong"
               onClick={() => setSelectedPhoto(photo)}
             >
-              <div className="aspect-[4/3] bg-neutral-900">
+              <div className="aspect-[4/3] bg-bg-elevated">
                 <img
                   src={photo.imageUrl}
                   alt={photo.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                 />
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/60 backdrop-blur-sm">
-                <p className="text-white text-xs truncate">{photo.title}</p>
+              <div className="absolute bottom-0 left-0 right-0 p-space-2 bg-gradient-to-t from-black/80 to-transparent">
+                <p className="text-content text-fluid--1 truncate">{photo.title}</p>
 
                 {photo.project && (
-                  <p className="text-neutral-300 text-[0.7rem] truncate">
-                    {photo.project}
-                  </p>
+                  <p className="text-muted text-[0.7rem] truncate">{photo.project}</p>
                 )}
               </div>
             </div>

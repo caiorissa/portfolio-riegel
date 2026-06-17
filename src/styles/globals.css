@@ -2,6 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   DESIGN SYSTEM — Riegel
+   Tokens semânticos. Tema único (escuro/cinematográfico), porém
+   estruturado para um futuro [data-theme] sem refatorar componentes.
+   ===================================================================== */
+
+:root {
+  /* ---- Cores base (preto e branco) ---- */
+  --bg: #000000;
+  --bg-elevated: #0a0a0a;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  /* ---- Texto ---- */
+  --text: #ffffff;
+  --text-muted: #a3a3a3;
+  --text-subtle: #737373;
+
+  /* ---- Acento (monocromático) ---- */
+  --accent: #e5e5e5;
+  --accent-strong: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.14);
+  --accent-grad: linear-gradient(135deg, #ffffff 0%, #d4d4d4 50%, #ffffff 100%);
+
+  /* ---- Tipografia ---- */
+  --font-display: "Bebas Neue", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Escala de tipo fluida (clamp) */
+  --step--1: clamp(0.78rem, 0.74rem + 0.18vw, 0.875rem);
+  --step-0: clamp(0.95rem, 0.9rem + 0.25vw, 1.0625rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 2rem);
+  --step-3: clamp(1.95rem, 1.55rem + 2vw, 3rem);
+  --step-4: clamp(2.5rem, 1.9rem + 3vw, 4.25rem);
+  --step-5: clamp(3.2rem, 2.2rem + 5vw, 6rem);
+  --step-6: clamp(4rem, 2.5rem + 7.5vw, 8rem);
+
+  /* ---- Espaçamento (base 4px) ---- */
+  --space-1: 0.25rem;   /* 4 */
+  --space-2: 0.5rem;    /* 8 */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+  --space-9: 6rem;      /* 96 */
+  --space-10: 8rem;     /* 128 */
+
+  /* ---- Raios ---- */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 9999px;
+
+  /* ---- Sombras ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 60px rgba(255, 255, 255, 0.1);
+  --shadow-glow-soft: 0 0 40px rgba(255, 255, 255, 0.05);
+}
+
 *,
 *::before,
 *::after {
@@ -16,11 +84,14 @@ body,
 
 html {
   overflow-x: hidden;
+  overflow-anchor: none;
   min-height: 100%;
-  background-color: #000;
-  background-image: url("/image.png");
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.04), transparent 42%),
+    radial-gradient(circle at 82% 0%, rgba(255, 255, 255, 0.03), transparent 48%),
+    radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.02), transparent 55%);
   background-repeat: no-repeat;
-  background-position: center center;
   background-attachment: fixed;
   background-size: cover;
 }
@@ -28,11 +99,23 @@ html {
 body {
   margin: 0;
   overflow-x: hidden;
+  overflow-anchor: none;
   min-height: 100%;
-  font-family: theme("fontFamily.sans");
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
   background-color: transparent;
-  color: #fafafa;
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
 }
 
 a {
@@ -40,28 +123,66 @@ a {
   text-decoration: none;
 }
 
+/* ---- Utilitários de marca ---- */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.text-gradient {
+  background: var(--accent-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.glass-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ---- Scrollbar ---- */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #050505;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2f2f2f;
-  border-radius: 9999px;
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444444;
+  background: var(--accent-strong);
 }
 
 :focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 2px;
 }
 
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* ---- Animações ---- */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
@@ -71,23 +192,9 @@ a {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-.hero-bg {
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.04), transparent 60%),
-    radial-gradient(circle at 80% 0%, rgba(255,255,255,0.03), transparent 55%),
-    radial-gradient(circle at 0% 100%, rgba(255,255,255,0.03), transparent 60%),
-    #000;
-}
-
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .reveal {
@@ -102,51 +209,58 @@ a {
   transform: translateY(0);
 }
 
+/* ---- Métrica flutuante (hero) ---- */
 .floating-metric {
-  text-align: right;
+  text-align: left;
   animation: float 6s ease-in-out infinite;
 }
 
 .metric-number {
-  font-size: clamp(3rem, 6vw, 4.5rem);
-  font-weight: 900;
-  color: white;
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 6vw, 5rem);
+  font-weight: 400;
+  color: var(--text);
   line-height: 1;
-
-  text-shadow:
-    0 8px 30px rgba(0,0,0,0.6),
-    0 0 60px rgba(255,255,255,0.08);
+  letter-spacing: 0.02em;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), var(--shadow-glow);
 }
 
 .metric-label {
-  margin-top: 8px;
-  font-size: 1.4rem;
-  color: #e5e5e5;
+  margin-top: var(--space-2);
+  font-size: var(--step-1);
+  color: var(--text-muted);
 }
 
 .metric-detail {
-  margin-top: 6px;
-  font-size: 0.7rem;
+  margin-top: var(--space-1);
+  font-size: var(--step--1);
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #a3a3a3;
+  color: var(--text-subtle);
 }
 
 @keyframes float {
   0% { transform: translateY(0); }
-  50% { transform: translateY(-28px); }
+  50% { transform: translateY(-24px); }
   100% { transform: translateY(0); }
-}
-
-@keyframes pop {
-  0% { transform: translateZ(60px) scale(1); }
-  50% { transform: translateZ(60px) scale(1.08); }
-  100% { transform: translateZ(60px) scale(1); }
 }
 
 @media (max-width: 768px) {
   .floating-metric {
-    text-align: center;
+    text-align: left;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .floating-metric {
+    animation: none;
+  }
+}

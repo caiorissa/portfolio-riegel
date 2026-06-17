@@ -11,7 +11,9 @@ export const translations = {
       menuTitle: "Navegação",
     },
     hero: {
-      title: "Criação audiovisual\nde alto impacto.",
+      eyebrow: "Brasil — Criação Audiovisual",
+      title: "Storytelling\nvisual de",
+      titleAccent: "alto impacto",
       description:
         "Transformando momentos em experiências visuais marcantes. Filmes, comerciais, documentários e vídeos criativos com estética moderna e profissional.",
       cta: "Entrar em contato",
@@ -20,10 +22,26 @@ export const translations = {
       metricDetail: "em projetos reais",
     },
     portfolio: {
-      label: "Portfólio Audiovisual",
+      title: "Portfólio Audiovisual",
       description:
-        "Uma seleção minimalista dos projetos em vídeo. Clique em um card para assistir e ver detalhes.",
+        "Uma seleção dos projetos em vídeo. Clique em um card para assistir e ver detalhes.",
       loading: "Carregando vídeos...",
+      empty: "Em breve, novos trabalhos por aqui.",
+      defaultCategory: "Vídeo",
+    },
+    about: {
+      name: "Artur Riegel",
+      eyebrow: "Criador & Diretor",
+      headline: "Cineasta.\nCriador.\nDiretor.",
+      body:
+        "Artur Riegel é cineasta e criador audiovisual, dedicado a contar histórias com linguagem cinematográfica e acabamento profissional. Da concepção à pós-produção: filmes, comerciais, documentários e conteúdo criativo pensados para gerar impacto real e memorável.",
+      stat1Label: "de visualizações geradas",
+      stat2Value: "YT",
+      stat2Label: "Portfólio audiovisual",
+    },
+    ctaBand: {
+      title: "Pronto para criar\nalgo excepcional?",
+      button: "Trabalhe com a Riegel Films",
     },
     videoModal: {
       header: "Detalhes do vídeo",
@@ -40,6 +58,10 @@ export const translations = {
     },
     footer: {
       rights: "Todos os direitos reservados.",
+      tagline:
+        "Criação audiovisual de alto impacto para marcas, eventos e plataformas digitais.",
+      studio: "Navegação",
+      contact: "Contato",
     },
     notFound: {
       label: "Erro 404",
@@ -62,6 +84,8 @@ export const translations = {
       logout: "Logout",
       videos: "Vídeos",
       videoTitleLabel: "Título",
+      videoCategoryLabel: "Categoria",
+      videoCategoryPlaceholder: "Ex.: Automotivo, Social, Casamento",
       videoUrlLabel: "Link completo do YouTube",
       videoDescLabel: "Descrição",
       saveVideo: "Salvar vídeo",
@@ -94,7 +118,9 @@ export const translations = {
       menuTitle: "Navigation",
     },
     hero: {
-      title: "High-impact\naudiovisual creation.",
+      eyebrow: "Brazil — Audiovisual Creation",
+      title: "High-impact\nvisual",
+      titleAccent: "storytelling",
       description:
         "Turning moments into remarkable visual experiences. Films, commercials, documentaries and creative videos with a modern, professional aesthetic.",
       cta: "Get in touch",
@@ -103,10 +129,27 @@ export const translations = {
       metricDetail: "across real projects",
     },
     portfolio: {
-      label: "Audiovisual Portfolio",
+      label: "Selected Work",
+      title: "Selected Work",
       description:
-        "A minimalist selection of video projects. Click a card to watch and see details.",
+        "A selection of video projects. Click a card to watch and see details.",
       loading: "Loading videos...",
+      empty: "New work coming soon.",
+      defaultCategory: "Video",
+    },
+    about: {
+      name: "Artur Riegel",
+      eyebrow: "Creator & Director",
+      headline: "Filmmaker.\nCreator.\nDirector.",
+      body:
+        "Artur Riegel is a filmmaker and audiovisual creator devoted to telling stories with cinematic language and professional finish. From concept to post-production: films, commercials, documentaries and creative content crafted to generate real, memorable impact.",
+      stat1Label: "views generated",
+      stat2Value: "YT",
+      stat2Label: "Audiovisual portfolio",
+    },
+    ctaBand: {
+      title: "Ready to build\nsomething exceptional?",
+      button: "Work with Riegel Films",
     },
     videoModal: {
       header: "Video details",
@@ -123,6 +166,10 @@ export const translations = {
     },
     footer: {
       rights: "All rights reserved.",
+      tagline:
+        "High-impact audiovisual creation for brands, events and digital platforms.",
+      studio: "Navigation",
+      contact: "Contact",
     },
     notFound: {
       label: "Error 404",
@@ -145,6 +192,8 @@ export const translations = {
       logout: "Logout",
       videos: "Videos",
       videoTitleLabel: "Title",
+      videoCategoryLabel: "Category",
+      videoCategoryPlaceholder: "E.g. Automotive, Social, Wedding",
       videoUrlLabel: "Full YouTube link",
       videoDescLabel: "Description",
       saveVideo: "Save video",

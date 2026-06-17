@@ -8,12 +8,14 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Contato from "./pages/Contato.jsx";
 import Footer from "./components/Footer.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 export default function App() {
   return (
     <div className="min-h-screen text-white flex flex-col overflow-x-hidden max-w-[100vw]">
+      <ScrollToTop />
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 [overflow-anchor:none]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

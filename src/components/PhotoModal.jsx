@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function PhotoModal({ photo, onClose }) {
   if (!photo) return null;
@@ -34,15 +34,17 @@ export default function PhotoModal({ photo, onClose }) {
             />
           </AnimatePresence>
 
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-            <p className="text-white font-medium text-lg">{photo.title}</p>
+          <div className="absolute bottom-0 left-0 right-0 p-space-4 bg-gradient-to-t from-black/80 to-transparent">
+            <p className="font-display uppercase text-fluid-1 text-content">
+              {photo.title}
+            </p>
 
             {photo.description && (
-              <p className="text-neutral-300 text-sm mt-1">{photo.description}</p>
+              <p className="text-fluid--1 text-muted mt-space-1">{photo.description}</p>
             )}
 
             {photo.project && (
-              <p className="text-neutral-400 text-xs mt-1">
+              <p className="text-[0.7rem] text-subtle mt-space-1">
                 Projeto: {photo.project}
               </p>
             )}
@@ -50,7 +52,7 @@ export default function PhotoModal({ photo, onClose }) {
 
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 bg-white/10 hover:bg-white/20 text-white w-9 h-9 rounded-full flex items-center justify-center text-xl"
+            className="absolute top-space-3 right-space-3 bg-white/10 hover:bg-accent hover:text-black text-content w-9 h-9 rounded-pill flex items-center justify-center text-xl transition-colors"
           >
             ×
           </button>
