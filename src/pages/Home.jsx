@@ -128,21 +128,19 @@ export default function Home() {
                 className="mt-space-5 max-w-xl text-fluid-0 leading-relaxed text-muted"
               />
 
-              <div className="mt-space-6 flex flex-wrap items-center gap-space-4">
-                <motion.button
-                  key={`hero-cta-${lang}`}
-                  type="button"
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={heroCtaTransition}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() =>
-                    window.location.assign(
-                      "/contato",
-                    )
-                  }
+              <motion.div
+                key={`hero-cta-${lang}`}
+                className="mt-space-6"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={heroCtaTransition}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link
+                  to="/contato"
+                  onClick={scrollPageToTop}
                   className="group inline-flex items-center gap-space-2 rounded-pill bg-white px-space-6 py-space-3
                     text-fluid--1 font-medium uppercase tracking-[0.16em] text-black
                     shadow-md transition-all duration-200 hover:bg-accent hover:shadow-glow"
@@ -152,8 +150,8 @@ export default function Home() {
                     size={16}
                     className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
-                </motion.button>
-              </div>
+                </Link>
+              </motion.div>
             </div>
 
             {/* Métrica — à direita do título (desktop) */}
@@ -161,7 +159,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4, ease: easeOut }}
-              className="lg:justify-self-end lg:pr-space-2 lg:text-right"
+              className="max-md:flex max-md:justify-center max-md:w-full lg:justify-self-end lg:pr-space-2 lg:text-right"
             >
               <div className="floating-metric max-md:mt-space-6">
                 <div className="metric-number">
@@ -275,23 +273,24 @@ export default function Home() {
       {/* ===================== CTA BAND ===================== */}
       <section className="relative max-w-6xl mx-auto px-space-4 pt-space-8 lg:pt-space-9 pb-space-9">
         <div
-          className="relative overflow-hidden rounded-xl bg-accent px-space-6 py-space-8 md:px-space-8
-            flex flex-col md:flex-row items-start md:items-center justify-between gap-space-5"
+          className="relative overflow-hidden rounded-xl bg-accent px-space-5 py-space-6 sm:px-space-6 sm:py-space-8 md:px-space-8
+            flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-5"
         >
           <div
             className="pointer-events-none absolute inset-0
               bg-[radial-gradient(circle_at_80%_-20%,rgba(255,255,255,0.25),transparent_50%)]"
             aria-hidden
           />
-          <h2 className="relative font-display uppercase text-fluid-4 leading-[0.95] text-black whitespace-pre-line">
+          <h2 className="relative font-display uppercase text-fluid-3 sm:text-fluid-4 leading-[0.95] text-black whitespace-pre-line">
             {t.ctaBand.title}
           </h2>
           <Link
             to="/contato"
             onClick={scrollPageToTop}
-            className="relative group inline-flex items-center gap-space-2 rounded-pill bg-black px-space-6 py-space-4
-              text-fluid--1 font-medium uppercase tracking-[0.16em] text-white
-              transition-all duration-200 hover:bg-bg-elevated whitespace-nowrap"
+            className="relative group flex w-full md:w-auto shrink-0 items-center justify-center gap-space-2
+              rounded-pill bg-black px-space-5 py-space-5 md:px-space-6 md:py-space-5 min-h-[3.25rem] md:min-h-[3.5rem]
+              text-[0.68rem] sm:text-fluid--1 font-medium uppercase tracking-[0.1em] sm:tracking-[0.14em] text-white
+              text-center leading-snug transition-all duration-200 hover:bg-bg-elevated"
           >
             {t.ctaBand.button}
             <ArrowUpRight
