@@ -29,6 +29,10 @@ export const translations = {
       empty: "Em breve, novos trabalhos por aqui.",
       defaultCategory: "Vídeo",
     },
+    clients: {
+      label: "Marcas & parceiros",
+      subtitle: "Pessoas e empresas que confiaram no nosso trabalho",
+    },
     about: {
       name: "Artur Riegel",
       eyebrow: "Criador & Diretor",
@@ -136,6 +140,10 @@ export const translations = {
       loading: "Loading videos...",
       empty: "New work coming soon.",
       defaultCategory: "Video",
+    },
+    clients: {
+      label: "Brands & partners",
+      subtitle: "People and companies that trusted our work",
     },
     about: {
       name: "Artur Riegel",

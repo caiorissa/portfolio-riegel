@@ -13,6 +13,7 @@ import {
 import { db } from "../lib/firebaseConfig";
 import { useLang } from "../i18n/LanguageContext.jsx";
 import VideoShowcase from "../components/VideoShowcase.jsx";
+import ClientsMarquee from "../components/ClientsMarquee.jsx";
 import VideoModal from "../components/VideoModal.jsx";
 import AboutPhotoModal, { PhotoNameOverlay } from "../components/AboutPhotoModal.jsx";
 import { scrollPageToTop } from "../components/ScrollToTop.jsx";
@@ -211,6 +212,8 @@ export default function Home() {
           />
         )}
       </section>
+
+      <ClientsMarquee label={t.clients.label} subtitle={t.clients.subtitle} />
 
       {/* ===================== ABOUT ===================== */}
       <section className="relative w-full border-t border-border">
