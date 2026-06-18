@@ -223,7 +223,7 @@ export default function Home() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, ease: easeOut }}
-            className="flex items-center justify-center bg-bg px-space-5 py-space-9 sm:px-space-7 lg:py-space-12"
+            className="hidden lg:flex items-center justify-center bg-bg px-space-5 py-space-9 sm:px-space-7 lg:py-space-12"
           >
             <div className="relative w-full max-w-[300px] sm:max-w-[340px] lg:max-w-[380px] aspect-[1513/2690]">
               <TiltedCard
@@ -254,19 +254,42 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6, ease: easeOut }}
-            className="flex flex-col justify-center bg-bg px-space-5 py-space-9 sm:px-space-7 lg:px-space-10 xl:px-space-12 lg:py-space-12"
+            className="flex flex-col justify-center bg-bg px-space-5 py-space-8 sm:px-space-7 lg:px-space-10 xl:px-space-12 lg:py-space-12"
           >
-            <p className="font-display uppercase text-fluid-3 leading-none text-content mb-space-6">
+            <p className="font-display uppercase text-fluid-3 leading-none text-content mb-space-5 lg:mb-space-6">
               {t.about.name}
             </p>
 
-            <p className="eyebrow mb-space-5">{t.about.eyebrow}</p>
+            <p className="eyebrow mb-space-4 lg:mb-space-5">{t.about.eyebrow}</p>
 
-            <h2 className="font-display uppercase text-fluid-5 leading-[0.92] text-content whitespace-pre-line">
-              {t.about.headline}
-            </h2>
+            <div className="flex items-center gap-space-3 sm:gap-space-4 lg:block">
+              <h2 className="flex-1 min-w-0 font-display uppercase text-fluid-4 sm:text-fluid-5 leading-[0.92] text-content whitespace-pre-line">
+                {t.about.headline}
+              </h2>
 
-            <p className="mt-space-6 max-w-md text-fluid-0 leading-relaxed text-muted">
+              <div className="relative lg:hidden shrink-0 w-[34vw] max-w-[9.5rem] min-w-[7rem] aspect-[1513/2690]">
+                <TiltedCard
+                  imageSrc={ABOUT_PHOTO_SRC}
+                  altText={t.about.name}
+                  containerHeight="100%"
+                  containerWidth="100%"
+                  imageHeight="100%"
+                  imageWidth="100%"
+                  rotateAmplitude={6}
+                  scaleOnHover={1.02}
+                  showMobileWarning={false}
+                  showTooltip={false}
+                  fill
+                  rounded
+                  objectFit="cover"
+                  objectPosition="center 18%"
+                  onClick={() => setAboutPhotoOpen(true)}
+                  className="absolute inset-0 h-full w-full"
+                />
+              </div>
+            </div>
+
+            <p className="mt-space-5 lg:mt-space-6 max-w-md text-fluid-0 leading-relaxed text-muted">
               {t.about.body}
             </p>
           </motion.div>
