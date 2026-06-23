@@ -263,26 +263,12 @@ a {
   .floating-metric {
     animation: none;
   }
-  .clients-marquee-track {
-    animation: none;
+  .clients-marquee-scroll {
+    scroll-behavior: auto;
   }
 }
 
-/* ---- Faixa de logos (marquee infinito) ---- */
-@keyframes clients-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.clients-marquee-track {
-  animation: clients-marquee 40s linear infinite;
-  will-change: transform;
-}
-
-.clients-marquee-track:hover {
-  animation-play-state: paused;
+/* ---- Faixa de logos (scroll + auto-play via JS) ---- */
+.clients-marquee-scroll {
+  -webkit-overflow-scrolling: touch;
 }
